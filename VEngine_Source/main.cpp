@@ -73,6 +73,14 @@ const char *fragmentShaderSource = "#version 330 core\n"
     "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\0";
 
+std::string GetLocationFullPath(const char* RootLocation , const char* FileName)
+{
+    std::string fileLocation = RootLocation ;
+   
+    fileLocation = fileLocation+ FileName;
+    return  fileLocation;
+}
+
 int main(int argc, const char * argv[])
 {  // glfw: initialize and configure
    // ------------------------------
@@ -193,6 +201,9 @@ int main(int argc, const char * argv[])
     FragLocation = FragLocation+ "//Shaders//Simple.frag";
     shader simpleShader(vertLocation.c_str(), FragLocation.c_str());
     
+    shader uniformShader(GetLocationFullPath(ProjectLocation , "//Shaders//Simple.vert").c_str(),
+                         GetLocationFullPath(ProjectLocation , "//Shaders//SimpleUniformCol.frag").c_str() );
+    
     /*shader a( "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source//Shaders//Simple.vert" ,
            "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source//Shaders//Simple.frag");*/
     
@@ -219,7 +230,8 @@ int main(int argc, const char * argv[])
         //Simple EBO
         glBindVertexArray(vaoQuadTri);
        // glUseProgram(shaderProgram);
-        simpleShader.Use();
+        uniformShader.Use();
+        uniformShader.setFloat4("colorToUse", 0.0f, 0, 1.0f, 1.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         glBindVertexArray(0);

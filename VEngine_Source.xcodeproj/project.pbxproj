@@ -31,6 +31,7 @@
 		3409469C270C2BEA00E161F0 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		3409469F270C35FF00E161F0 /* Simple.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Simple.vert; sourceTree = "<group>"; };
 		340946A0270C362200E161F0 /* Simple.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Simple.frag; sourceTree = "<group>"; };
+		340946A2270C5F7800E161F0 /* SimpleUniformCol.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = SimpleUniformCol.frag; sourceTree = "<group>"; };
 		34D01691270AB3EC00CE409F /* VEngine_Source */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VEngine_Source; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D01694270AB3EC00CE409F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		34D0169C270AB46A00CE409F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -65,6 +66,7 @@
 			children = (
 				3409469F270C35FF00E161F0 /* Simple.vert */,
 				340946A0270C362200E161F0 /* Simple.frag */,
+				340946A2270C5F7800E161F0 /* SimpleUniformCol.frag */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
