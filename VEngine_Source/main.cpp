@@ -9,6 +9,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cmath>
 #include "shader.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -231,7 +232,9 @@ int main(int argc, const char * argv[])
         glBindVertexArray(vaoQuadTri);
        // glUseProgram(shaderProgram);
         uniformShader.Use();
-        uniformShader.setFloat4("colorToUse", 0.0f, 0, 1.0f, 1.0f);
+        float timeValue = glfwGetTime();
+        float blueValue = sin(timeValue) / 2.0f + 0.5f;
+        uniformShader.setFloat4("colorToUse", 0.0f, 0,blueValue, 1.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         glBindVertexArray(0);
