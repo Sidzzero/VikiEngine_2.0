@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3409469D270C2BEA00E161F0 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3409469B270C2BEA00E161F0 /* shader.cpp */; };
 		34D01695270AB3EC00CE409F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34D01694270AB3EC00CE409F /* main.cpp */; };
 		34D0169D270AB46A00CE409F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D0169C270AB46A00CE409F /* OpenGL.framework */; };
 		34D0169F270AB68100CE409F /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D0169E270AB68100CE409F /* libglfw.3.dylib */; };
@@ -26,6 +27,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3409469B270C2BEA00E161F0 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
+		3409469C270C2BEA00E161F0 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
+		3409469F270C35FF00E161F0 /* Simple.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Simple.vert; sourceTree = "<group>"; };
+		340946A0270C362200E161F0 /* Simple.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Simple.frag; sourceTree = "<group>"; };
 		34D01691270AB3EC00CE409F /* VEngine_Source */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VEngine_Source; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D01694270AB3EC00CE409F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		34D0169C270AB46A00CE409F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -46,6 +51,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3409469A270C2BCA00E161F0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				3409469B270C2BEA00E161F0 /* shader.cpp */,
+				3409469C270C2BEA00E161F0 /* shader.hpp */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		3409469E270C35B400E161F0 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				3409469F270C35FF00E161F0 /* Simple.vert */,
+				340946A0270C362200E161F0 /* Simple.frag */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
 		34D01688270AB3EC00CE409F = {
 			isa = PBXGroup;
 			children = (
@@ -66,6 +89,8 @@
 		34D01693270AB3EC00CE409F /* VEngine_Source */ = {
 			isa = PBXGroup;
 			children = (
+				3409469E270C35B400E161F0 /* Shaders */,
+				3409469A270C2BCA00E161F0 /* Utils */,
 				34D01694270AB3EC00CE409F /* main.cpp */,
 				34D016A0270AB71B00CE409F /* glad.c */,
 			);
@@ -137,6 +162,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3409469D270C2BEA00E161F0 /* shader.cpp in Sources */,
 				34D01695270AB3EC00CE409F /* main.cpp in Sources */,
 				34D016A1270AB71B00CE409F /* glad.c in Sources */,
 			);

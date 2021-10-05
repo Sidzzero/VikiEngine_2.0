@@ -9,6 +9,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "shader.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -16,6 +17,8 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+const char* ProjectLocation  = "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source";
 
 GLfloat verticesTriangleSimple[]=
 {
@@ -182,6 +185,19 @@ int main(int argc, const char * argv[])
         }
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
+    
+    //Shader object
+    std::string vertLocation = ProjectLocation ;//+"//Shaders//Simple.vert";
+    std::string FragLocation = ProjectLocation ;//+ "Shaders//Simple.frag";
+    vertLocation = vertLocation+ "//Shaders//Simple.vert";
+    FragLocation = FragLocation+ "//Shaders//Simple.frag";
+    shader simpleShader(vertLocation.c_str(), FragLocation.c_str());
+    
+    /*shader a( "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source//Shaders//Simple.vert" ,
+           "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source//Shaders//Simple.frag");*/
+    
+  
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -196,12 +212,14 @@ int main(int argc, const char * argv[])
         //Simple VAO
         
         glBindVertexArray(vaoSingleTri);
-        glUseProgram(shaderProgram);
+        //glUseProgram(shaderProgram);
+        simpleShader.Use();
         glDrawArrays(GL_TRIANGLES , 0 , 6);
         glBindVertexArray(0);
         //Simple EBO
         glBindVertexArray(vaoQuadTri);
-        glUseProgram(shaderProgram);
+       // glUseProgram(shaderProgram);
+        simpleShader.Use();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         glBindVertexArray(0);
