@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3409469D270C2BEA00E161F0 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3409469B270C2BEA00E161F0 /* shader.cpp */; };
+		340946A4270D9E4E00E161F0 /* stb_image.h in Sources */ = {isa = PBXBuildFile; fileRef = 340946A3270D9E4E00E161F0 /* stb_image.h */; };
 		34D01695270AB3EC00CE409F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34D01694270AB3EC00CE409F /* main.cpp */; };
 		34D0169D270AB46A00CE409F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D0169C270AB46A00CE409F /* OpenGL.framework */; };
 		34D0169F270AB68100CE409F /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D0169E270AB68100CE409F /* libglfw.3.dylib */; };
@@ -32,6 +33,7 @@
 		3409469F270C35FF00E161F0 /* Simple.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Simple.vert; sourceTree = "<group>"; };
 		340946A0270C362200E161F0 /* Simple.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Simple.frag; sourceTree = "<group>"; };
 		340946A2270C5F7800E161F0 /* SimpleUniformCol.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = SimpleUniformCol.frag; sourceTree = "<group>"; };
+		340946A3270D9E4E00E161F0 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		34D01691270AB3EC00CE409F /* VEngine_Source */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VEngine_Source; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D01694270AB3EC00CE409F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		34D0169C270AB46A00CE409F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -57,6 +59,7 @@
 			children = (
 				3409469B270C2BEA00E161F0 /* shader.cpp */,
 				3409469C270C2BEA00E161F0 /* shader.hpp */,
+				340946A3270D9E4E00E161F0 /* stb_image.h */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -165,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3409469D270C2BEA00E161F0 /* shader.cpp in Sources */,
+				340946A4270D9E4E00E161F0 /* stb_image.h in Sources */,
 				34D01695270AB3EC00CE409F /* main.cpp in Sources */,
 				34D016A1270AB71B00CE409F /* glad.c in Sources */,
 			);

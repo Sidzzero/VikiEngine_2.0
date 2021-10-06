@@ -8,7 +8,7 @@
 #include "shader.hpp"
 shader::shader(const char *vertSource , const char *fragSource)
 {
-    
+    std::cout<<"Loading Shaders:"<<vertSource<<","<<fragSource<<std::endl;
     //1. Load file contents
     std::string vertexCode;
     std::string fragmentCode;

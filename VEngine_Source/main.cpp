@@ -12,6 +12,9 @@
 #include <cmath>
 #include "shader.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -57,6 +60,14 @@ GLuint indicesEBOQuad[]=
     1, 2, 3
 };
 
+GLfloat verticesQuadTex[]=
+{
+    
+     0.5f , 0.5f ,0.0f,  1.0f,1.0f,
+    0.5f , -0.5f ,0.0f,  1.0f ,0.0f,
+    -0.5f , -0.5f ,0.0f,  0.0f,0.0f,
+    -0.5f , 0.5f ,0.0f,  0.0f ,1.0f
+};
 
 unsigned int vertexShader;
 
@@ -148,11 +159,13 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboQuadTri);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesEBOQuad), indicesEBOQuad, GL_STATIC_DRAW);
     
+    
     //Loaded the Data into the buffer
 
     
     glVertexAttribPointer(0,3,GL_FLOAT , GL_FALSE ,sizeof(GL_FLOAT)*3.0 , (void*) 0);
     glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
    // glBindVertexArray(0);
         //Shader Compile !
         int  success;
@@ -205,11 +218,53 @@ int main(int argc, const char * argv[])
     shader uniformShader(GetLocationFullPath(ProjectLocation , "//Shaders//Simple.vert").c_str(),
                          GetLocationFullPath(ProjectLocation , "//Shaders//SimpleUniformCol.frag").c_str() );
     
-    /*shader a( "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source//Shaders//Simple.vert" ,
-           "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source//Shaders//Simple.frag");*/
-    
-  
 
+    //---Loading TExtures
+    //Creating a VBO stuff
+    GLuint vaoTex , vboTex , eboTex;
+    glGenVertexArrays(1, &vaoTex);
+    glBindVertexArray(vaoTex);
+    glGenBuffers(1, &vboTex);
+    glBindBuffer(GL_ARRAY_BUFFER, vboTex);
+    
+    glBufferData(GL_ARRAY_BUFFER,sizeof(verticesQuadTex),verticesQuadTex,GL_STATIC_DRAW);
+    
+    glGenBuffers(1, &eboTex);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboQuadTri);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesEBOQuad), indicesEBOQuad, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0,3,GL_FLOAT , GL_FALSE ,sizeof(GL_FLOAT)*5 , (void*) 0);
+    glEnableVertexAttribArray(0);
+    
+    glVertexAttribPointer(1,2,GL_FLOAT , GL_FALSE ,sizeof(GL_FLOAT)*5 , (void*) (sizeof(float)*3));//NOTE: ONLY NUMBERS !
+
+    glEnableVertexAttribArray(1);
+    
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load(GetLocationFullPath(ProjectLocation , "//container.jpg").c_str(), &width, &height, &nrChannels, 0);
+   
+    GLuint texID;
+    glGenTextures(1, &texID);
+    
+    glBindTexture(GL_TEXTURE_2D , texID);
+  
+    if(data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout<<"Texture not Loaded !"<<std::endl;
+    }
+    stbi_set_flip_vertically_on_load(true); 
+    stbi_image_free(data);
+    
+    shader shaderTex(GetLocationFullPath(ProjectLocation ,"//Shaders//SimpleTex.vert").c_str(),
+                     GetLocationFullPath(ProjectLocation ,"//Shaders//SimpleTex.frag").c_str()
+                     );
+    shaderTex.Use();
+    shaderTex.setInt("ourTexture", 0);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -228,6 +283,8 @@ int main(int argc, const char * argv[])
         simpleShader.Use();
         glDrawArrays(GL_TRIANGLES , 0 , 6);
         glBindVertexArray(0);
+        
+        /*
         //Simple EBO
         glBindVertexArray(vaoQuadTri);
        // glUseProgram(shaderProgram);
@@ -237,6 +294,14 @@ int main(int argc, const char * argv[])
         uniformShader.setFloat4("colorToUse", 0.0f, 0,blueValue, 1.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
+        glBindVertexArray(0);
+        */
+        //Texture style
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texID);
+        glBindVertexArray(vaoTex);
+        shaderTex.Use();
+        glDrawElements(GL_TRIANGLES , 6, GL_UNSIGNED_INT , 0);
         glBindVertexArray(0);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
