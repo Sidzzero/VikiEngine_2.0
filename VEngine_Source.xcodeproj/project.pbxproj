@@ -296,6 +296,7 @@
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glad/**",
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glad/**",
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glfw_3_3_4/**",
+					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glfw_3_3_4,
@@ -305,6 +306,7 @@
 				USER_HEADER_SEARCH_PATHS = (
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glfw_3_3_4/include/**",
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glad/**",
+					/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies,
 				);
 			};
 			name = Debug;
@@ -317,6 +319,7 @@
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glad/**",
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glad/**",
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glfw_3_3_4/**",
+					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glfw_3_3_4,
@@ -326,6 +329,7 @@
 				USER_HEADER_SEARCH_PATHS = (
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glfw_3_3_4/include/**",
 					"/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies/macos/glad/**",
+					/Users/Srikanth_Siddhu/VEngine_2.0/VEngineSource/VEngine_Source/VEngine_Source/dependencies,
 				);
 			};
 			name = Release;

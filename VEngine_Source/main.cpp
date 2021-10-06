@@ -15,6 +15,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -94,10 +98,13 @@ std::string GetLocationFullPath(const char* RootLocation , const char* FileName)
 }
 
 int main(int argc, const char * argv[])
-{  // glfw: initialize and configure
+{
+
+    
+   // glfw: initialize and configure
    // ------------------------------
   
-   glfwInit();
+    glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
