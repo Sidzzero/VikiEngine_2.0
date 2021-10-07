@@ -73,6 +73,52 @@ GLfloat verticesQuadTex[]=
     -0.5f , 0.5f ,0.0f,  0.0f ,1.0f
 };
 
+GLfloat verticesCube[] =
+{
+     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    
+};
+
 unsigned int vertexShader;
 
 const char *vertexShaderSource = "#version 330 core\n"
@@ -272,6 +318,59 @@ int main(int argc, const char * argv[])
                      );
     shaderTex.Use();
     shaderTex.setInt("ourTexture", 0);
+    
+    
+    // Cube Creations...
+    GLuint vaoCube, vboCube;
+    
+    glGenVertexArrays(1,&vaoCube);
+    glBindVertexArray(vaoCube);
+    
+    glGenBuffers(1,&vboCube);
+    glBindBuffer(GL_ARRAY_BUFFER , vboCube);
+    
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesCube),verticesCube,GL_STATIC_DRAW);
+    //Position
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0,3,GL_FLOAT , GL_FALSE ,sizeof(GL_FLOAT)*5 , (void*) 0);//NOTE: ONLY
+    //UV
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1,2,GL_FLOAT , GL_FALSE ,sizeof(GL_FLOAT)*5 , (void*) (sizeof(float)*3));//NOTE: ONLY
+    
+    shader shaderMVP(GetLocationFullPath(ProjectLocation ,"//Shaders//SimpleMVP.vert").c_str(),
+                     GetLocationFullPath(ProjectLocation ,"//Shaders//SimpleMVP.frag").c_str()
+                     );
+    glm::mat4 model(1.0f) ;
+    glm::mat4 view(1.0f);
+    glm::mat4 projection(1.0f);
+    
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  
+    // note that we're translating the scene in the reverse direction of where we want to move
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+ 
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    //Setup uniform
+    shaderMVP.Use();
+    shaderMVP.SetMat4("model", glm::value_ptr(model));
+    shaderMVP.SetMat4("view", glm::value_ptr(view));
+    shaderMVP.SetMat4("projection", glm::value_ptr(projection));
+    
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+    glm::mat4 tempPos(1.0);
+    
+    glEnable(GL_DEPTH_TEST);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -280,17 +379,18 @@ int main(int argc, const char * argv[])
         // -----
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    
         //Simple VAO
-        
+        /*
         glBindVertexArray(vaoSingleTri);
         //glUseProgram(shaderProgram);
         simpleShader.Use();
         glDrawArrays(GL_TRIANGLES , 0 , 6);
         glBindVertexArray(0);
         
+        */
         /*
         //Simple EBO
         glBindVertexArray(vaoQuadTri);
@@ -304,12 +404,34 @@ int main(int argc, const char * argv[])
         glBindVertexArray(0);
         */
         //Texture style
+        /*
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texID);
         glBindVertexArray(vaoTex);
         shaderTex.Use();
         glDrawElements(GL_TRIANGLES , 6, GL_UNSIGNED_INT , 0);
         glBindVertexArray(0);
+        */
+        //CUBE
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texID);
+        glBindVertexArray(vaoCube);
+        for(auto pos: cubePositions)
+        {
+            tempPos = model;
+            tempPos =  glm::translate(tempPos, pos);
+            float timeValue = glfwGetTime();
+            float blueValue = 360.0f*sin(timeValue) ;
+            // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            tempPos = glm::rotate(tempPos, glm::radians(blueValue), glm::vec3(0,1.0f,0));
+            shaderMVP.Use();
+            shaderMVP.SetMat4("model", glm::value_ptr(tempPos));
+            glDrawArrays(GL_TRIANGLES , 0 ,36);
+        }
+       // shaderMVP.Use();
+       // glDrawArrays(GL_TRIANGLES , 0 ,36);
+        
+        
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
