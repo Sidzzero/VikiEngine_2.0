@@ -135,6 +135,12 @@ const char *fragmentShaderSource = "#version 330 core\n"
     "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\0";
 
+//Camera controls
+float camMoveSpeed =1.0f;
+glm::vec3 InpCamPos(0.0f ,0.0f ,3.0f);
+glm::vec3 InpCamTargetDirection(0.0f ,0.0f ,-1.0f);
+glm::vec3 InpCamUp(0.0f ,1.0f ,0.0f);
+
 std::string GetLocationFullPath(const char* RootLocation , const char* FileName)
 {
     std::string fileLocation = RootLocation ;
@@ -142,6 +148,8 @@ std::string GetLocationFullPath(const char* RootLocation , const char* FileName)
     fileLocation = fileLocation+ FileName;
     return  fileLocation;
 }
+float deltaTime = 0.0f;
+float lastTime  = 0.0f;
 
 int main(int argc, const char * argv[])
 {
@@ -378,6 +386,7 @@ int main(int argc, const char * argv[])
     glm::mat4 tempPos(1.0);
     
     glEnable(GL_DEPTH_TEST);
+    float fCurrentTime = 0;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -389,7 +398,9 @@ int main(int argc, const char * argv[])
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         float TimeValue = glfwGetTime();
-   
+        fCurrentTime = glfwGetTime();
+        deltaTime = fCurrentTime - lastTime;
+        lastTime = fCurrentTime;
         //Simple VAO
         /*
         glBindVertexArray(vaoSingleTri);
@@ -426,13 +437,17 @@ int main(int argc, const char * argv[])
         glBindVertexArray(vaoCube);
         
         //Rotate View viewed from UP  vector
-      
+      /*
         float radius = 10.0f;
         float ZValue = sin(TimeValue) *radius;
         float XValue = cos(TimeValue) *radius;
         view = glm::lookAt( glm::vec3(XValue,0.0f,ZValue),
                             glm::vec3(0.0f),
                             glm::vec3(0.0f,1.0f,0.0f));
+        
+        */
+        //Rotate with Controls
+        view = glm::lookAt(InpCamPos,   InpCamPos+InpCamTargetDirection, InpCamUp);
         shaderMVP.SetMat4("view", glm::value_ptr(view));
         for(auto pos: cubePositions)
         {
@@ -471,6 +486,28 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        InpCamPos +=InpCamTargetDirection*camMoveSpeed*deltaTime;
+        std::cout<<InpCamPos.z<<","<<deltaTime<<"\n";
+    }
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        InpCamPos -=InpCamTargetDirection*camMoveSpeed*deltaTime;
+        std::cout<<InpCamPos.z<<","<<deltaTime<<"\n";
+    }
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        auto crossVal = glm::normalize( glm::cross(InpCamTargetDirection,InpCamUp));
+        InpCamPos +=crossVal*camMoveSpeed*deltaTime;
+        std::cout<<InpCamPos.x<<","<<deltaTime<<"\n";
+    }
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        auto crossVal = glm::normalize( glm::cross(InpCamTargetDirection,InpCamUp));
+        InpCamPos -=crossVal*camMoveSpeed*deltaTime;
+        std::cout<<InpCamPos.x<<","<<deltaTime<<"\n";
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
