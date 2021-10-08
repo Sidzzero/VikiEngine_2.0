@@ -347,13 +347,20 @@ int main(int argc, const char * argv[])
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   
     // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));//Right hand rule towards negative z axis  as you want camera be at orgin 0,0,0 
  
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     //Setup uniform
     shaderMVP.Use();
     shaderMVP.SetMat4("model", glm::value_ptr(model));
+    
+    //Position , lookpostion , up vector !
+    //Moves in Postive Z axis
+    view = glm::lookAt( glm::vec3(0.0f,0.0f,6.0f),
+                        glm::vec3(0.0f),
+                        glm::vec3(0.0f,1.0f,0.0f));
     shaderMVP.SetMat4("view", glm::value_ptr(view));
+    
     shaderMVP.SetMat4("projection", glm::value_ptr(projection));
     
     glm::vec3 cubePositions[] = {
@@ -375,12 +382,13 @@ int main(int argc, const char * argv[])
     // -----------
     while (!glfwWindowShouldClose(window))
     {
+        
         // input
         // -----
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        float TimeValue = glfwGetTime();
    
         //Simple VAO
         /*
@@ -416,17 +424,30 @@ int main(int argc, const char * argv[])
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texID);
         glBindVertexArray(vaoCube);
+        
+        //Rotate View viewed from UP  vector
+      
+        float radius = 10.0f;
+        float ZValue = sin(TimeValue) *radius;
+        float XValue = cos(TimeValue) *radius;
+        view = glm::lookAt( glm::vec3(XValue,0.0f,ZValue),
+                            glm::vec3(0.0f),
+                            glm::vec3(0.0f,1.0f,0.0f));
+        shaderMVP.SetMat4("view", glm::value_ptr(view));
         for(auto pos: cubePositions)
         {
             tempPos = model;
             tempPos =  glm::translate(tempPos, pos);
+            //Rotate everybody !
+            /*
             float timeValue = glfwGetTime();
             float blueValue = 360.0f*sin(timeValue) ;
-            // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             tempPos = glm::rotate(tempPos, glm::radians(blueValue), glm::vec3(0,1.0f,0));
             shaderMVP.Use();
+          
+            */
             shaderMVP.SetMat4("model", glm::value_ptr(tempPos));
-            glDrawArrays(GL_TRIANGLES , 0 ,36);
+             glDrawArrays(GL_TRIANGLES , 0 ,36);
         }
        // shaderMVP.Use();
        // glDrawArrays(GL_TRIANGLES , 0 ,36);
