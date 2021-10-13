@@ -11,6 +11,8 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include "shader.hpp"
+#include <vector>
+
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -25,6 +27,7 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
 
 const char* ProjectLocation  = "//Users//Srikanth_Siddhu//VEngine_2.0//VEngineSource//VEngine_Source//VEngine_Source";
 
@@ -150,6 +153,28 @@ std::string GetLocationFullPath(const char* RootLocation , const char* FileName)
 }
 float deltaTime = 0.0f;
 float lastTime  = 0.0f;
+
+//----SNAKE----//
+enum eDirection {UP,DOWN , LEFT , RIGHT};
+constexpr float snakeSpeed = 0.01f;
+constexpr float snakeSingleScale = 1.01f;
+
+const float snakeMaxLeft = -5.4f;
+const float snakeMaxRight = 5.4f;
+
+const float snakeMaxUp = 5.4f;
+const float snakeMaxDown= -5.4f;
+
+const float snakeUpdateTime = 0.2f;
+
+std::deque<glm::vec4> DequeSnake;
+glm::mat4 snakeModel(1.0f);
+glm::vec3 headPos;
+eDirection snakeDirection = eDirection::LEFT;
+float m_WaitTime = 0;
+
+
+//----SNAKE----//
 
 int main(int argc, const char * argv[])
 {
@@ -355,14 +380,19 @@ int main(int argc, const char * argv[])
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   
     // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));//Right hand rule towards negative z axis  as you want camera be at orgin 0,0,0 
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));//Right hand rule towards negative z axis  as you want camera be at orgin 0,0,0
  
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), (SCR_WIDTH / SCR_HEIGHT)*1.0f, 0.1f, 100.0f);
+  //  projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
+    view = glm::mat4();
+    //projection =  glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, -4.0f, 100.0f);
     //Setup uniform
     shaderMVP.Use();
+        //Position , lookpostion , up vector !
+       
     shaderMVP.SetMat4("model", glm::value_ptr(model));
     
-    //Position , lookpostion , up vector !
+
     //Moves in Postive Z axis
     view = glm::lookAt( glm::vec3(0.0f,0.0f,6.0f),
                         glm::vec3(0.0f),
@@ -384,6 +414,17 @@ int main(int argc, const char * argv[])
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     glm::mat4 tempPos(1.0);
+    
+    
+    glm::vec3 snakeParts[] =
+    {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 1.0f,  0.0f, 0.0f),
+    };
+ 
+    DequeSnake.push_back(glm::vec4( 1.01f,   0.0f,  0.0f,1.0f));
+    DequeSnake.push_back(glm::vec4( 2.02f,  0.0f, 0.0f,2.0f));
+    DequeSnake.push_back(glm::vec4( 3.03f,  0.0f, 0.0f,3.0f));
     
     glEnable(GL_DEPTH_TEST);
     float fCurrentTime = 0;
@@ -446,7 +487,9 @@ int main(int argc, const char * argv[])
                             glm::vec3(0.0f,1.0f,0.0f));
         
         */
+        
         //Rotate with Controls
+        /*
         view = glm::lookAt(InpCamPos,   InpCamPos+InpCamTargetDirection, InpCamUp);
         shaderMVP.SetMat4("view", glm::value_ptr(view));
         for(auto pos: cubePositions)
@@ -454,20 +497,66 @@ int main(int argc, const char * argv[])
             tempPos = model;
             tempPos =  glm::translate(tempPos, pos);
             //Rotate everybody !
-            /*
+          
             float timeValue = glfwGetTime();
             float blueValue = 360.0f*sin(timeValue) ;
             tempPos = glm::rotate(tempPos, glm::radians(blueValue), glm::vec3(0,1.0f,0));
             shaderMVP.Use();
           
-            */
+          
             shaderMVP.SetMat4("model", glm::value_ptr(tempPos));
              glDrawArrays(GL_TRIANGLES , 0 ,36);
         }
+
        // shaderMVP.Use();
        // glDrawArrays(GL_TRIANGLES , 0 ,36);
+         */
+        //SNAKE
+        m_WaitTime+=1.0f*deltaTime;
+        if(m_WaitTime >= snakeUpdateTime)
+        {
+         
+         m_WaitTime = 0;
+         shaderMVP.Use();
+      
+        auto lastTail = DequeSnake.back();
+        //headPos = DequeSnake.front() + glm::vec4(-1.01f,0,0 ,DequeSnake.front().w);
+        //Update lastTail
+        lastTail = glm::vec4(headPos.x, headPos.y,headPos.z,lastTail.w);;
+        DequeSnake.pop_back();
+        DequeSnake.push_front(lastTail);//First
+       
+        //Setup head !
+        std::cout<<"----"<<std::endl;
+            
+        }
+        glm::mat4 tempMAt = glm::mat4(1.0f);
+        int iCount = 0;
+        for(auto pos : DequeSnake)
+        {
+               tempMAt = glm::scale(glm::mat4(1.0f), glm::vec3(0.5));
+               tempMAt = glm::translate( tempMAt,glm::vec3(pos.x , pos.y, pos.z) );
+                if(pos.w == 1)
+            shaderMVP.setFloat4("tintColor", 1, 0, 0, 1.0f);
+                else if(pos.w ==2)
+                    shaderMVP.setFloat4("tintColor", 0, 1, 0, 1.0f);
+                else
+                    shaderMVP.setFloat4("tintColor", 0, 0, 1, 1.0f);
+            shaderMVP.SetMat4("model", glm::value_ptr(tempMAt));
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, texID);
+            glBindVertexArray(vaoCube);
+      
+            glDrawArrays(GL_TRIANGLES , 0 ,6);
+                iCount++;
+                std::cout<<iCount<<":"<<pos.x<<std::endl;
+            
+        }
         
-        
+        std::cout<<"----"<<std::endl;
+       // tempMAt = glm::translate( glm::mat4(1.0f), headPos + glm::vec3(0,0.2f,0.0f));
+        //shaderMVP.SetMat4("model", glm::value_ptr(tempMAt));
+     //   glDrawArrays(GL_TRIANGLES , 0 ,6);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -484,30 +573,79 @@ int main(int argc, const char * argv[])
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
+ 
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+   
+    
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && snakeDirection != eDirection::DOWN)
     {
-        InpCamPos +=InpCamTargetDirection*camMoveSpeed*deltaTime;
-        std::cout<<InpCamPos.z<<","<<deltaTime<<"\n";
+    
+        snakeDirection = eDirection::UP;
     }
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+   else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS&& snakeDirection != eDirection::UP)
     {
-        InpCamPos -=InpCamTargetDirection*camMoveSpeed*deltaTime;
-        std::cout<<InpCamPos.z<<","<<deltaTime<<"\n";
+   
+        snakeDirection = eDirection::DOWN;
     }
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+   else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && snakeDirection != eDirection::LEFT)
     {
-        auto crossVal = glm::normalize( glm::cross(InpCamTargetDirection,InpCamUp));
-        InpCamPos +=crossVal*camMoveSpeed*deltaTime;
-        std::cout<<InpCamPos.x<<","<<deltaTime<<"\n";
+
+        snakeDirection = eDirection::RIGHT;
     }
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && snakeDirection != eDirection::RIGHT)
     {
-        auto crossVal = glm::normalize( glm::cross(InpCamTargetDirection,InpCamUp));
-        InpCamPos -=crossVal*camMoveSpeed*deltaTime;
-        std::cout<<InpCamPos.x<<","<<deltaTime<<"\n";
+  
+        snakeDirection = eDirection::LEFT;
     }
+  
+    headPos = DequeSnake.front();
+    switch (snakeDirection) {
+        case eDirection::UP:
+          
+            headPos += glm::vec3(0.0f,1.0f,0) ;
+            break;
+            
+        case eDirection::DOWN:
+     
+            headPos += glm::vec3(0.0f,-1.0f,0) ;
+            break;
+        case eDirection::LEFT:
+          
+            headPos += glm::vec3(-1.0f,0,0) ;
+            break;
+        case eDirection::RIGHT:
+          
+            headPos += glm::vec3(1.0f,0,0) ;
+            break;
+        default:
+            break;
+    }
+  
+    std::cout<<headPos.x<<std::endl;
+    std::cout<<headPos.y<<std::endl;
+  
+    if(headPos.x <snakeMaxLeft)
+    {
+        snakeModel[3][0] = snakeMaxRight;
+        headPos.x =snakeMaxRight;
+    }
+    else if(headPos.x >snakeMaxRight)
+    {
+        snakeModel[3][0] = snakeMaxLeft;
+        headPos.x =snakeMaxLeft;
+    }
+    if(headPos.y <snakeMaxDown)
+    {
+        snakeModel[3][1] = snakeMaxUp;
+        headPos.y =snakeMaxUp;
+    }
+    else if(headPos.y >snakeMaxUp)
+    {
+        snakeModel[3][1] = snakeMaxDown;
+        headPos.y =snakeMaxDown;
+    }
+   
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
