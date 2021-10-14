@@ -23,6 +23,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -177,6 +178,22 @@ bool CheckCollision(glm::vec3 &a_vValue1 , glm::vec3 &a_vValue2);
 
 
 bool CheckSnakeCollision(const std::deque<glm::vec4> &dequeSnake , float &a_fCheckDistance) ;
+glm::vec3 GetDirectionVector(eDirection a_currentDirection)
+{
+    switch (a_currentDirection)
+    {
+        case eDirection::LEFT:
+            return glm::vec3(-1.0f,0,0);
+        case eDirection::RIGHT:
+            return glm::vec3(1.0f,0,0);
+        case eDirection::UP:
+            return glm::vec3(0.0f,1.0f,0);
+        case eDirection::DOWN:
+            return glm::vec3(0.0f,-1.0f,0);
+      
+    }
+    return glm::vec3(1.0f,0,0);
+};
 //----SNAKE----//
 
 int main(int argc, const char * argv[])
@@ -206,6 +223,7 @@ int main(int argc, const char * argv[])
    }
      glfwMakeContextCurrent(window);
      glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -426,13 +444,13 @@ int main(int argc, const char * argv[])
     };
  
     DequeSnake.push_back(glm::vec4( 1.01f,   0.0f,  0.0f,1.0f));
-    DequeSnake.push_back(glm::vec4( 2.02f,  0.0f, 0.0f,2.0f));
-    DequeSnake.push_back(glm::vec4( 3.03f,  0.0f, 0.0f,3.0f));
-    DequeSnake.push_back(glm::vec4( 4.04f,  0.0f, 0.0f,1.0f));
-    DequeSnake.push_back(glm::vec4( 5.05f,  0.0f, 0.0f,2.0f));
-    DequeSnake.push_back(glm::vec4( 6.06f,  0.0f, 0.0f,3.0f));
-    DequeSnake.push_back(glm::vec4( 7.07f,  0.0f, 0.0f,3.0f));
-    DequeSnake.push_back(glm::vec4( 8.08f,  0.0f, 0.0f,3.0f));
+   // DequeSnake.push_back(glm::vec4( 2.02f,  0.0f, 0.0f,2.0f));
+   // DequeSnake.push_back(glm::vec4( 3.03f,  0.0f, 0.0f,3.0f));
+  //  DequeSnake.push_back(glm::vec4( 4.04f,  0.0f, 0.0f,1.0f));
+  //  DequeSnake.push_back(glm::vec4( 5.05f,  0.0f, 0.0f,2.0f));
+  //  DequeSnake.push_back(glm::vec4( 6.06f,  0.0f, 0.0f,3.0f));
+  //  DequeSnake.push_back(glm::vec4( 7.07f,  0.0f, 0.0f,3.0f));
+ //   DequeSnake.push_back(glm::vec4( 8.08f,  0.0f, 0.0f,3.0f));
     glEnable(GL_DEPTH_TEST);
     float fCurrentTime = 0;
     // render loop
@@ -605,15 +623,18 @@ void processInput(GLFWwindow *window)
    {
        bCrash = false;
        headPos = glm::vec3(1.0f);
-       int iCount = 0;
-       auto size = DequeSnake.size();
-       for(auto it = DequeSnake.begin() ; it!=DequeSnake.end(); ++it )
-       {
-           *it = glm::vec4(0 + 1.01f*iCount, 0, 0 ,(*it).w);
-           iCount++;
-       }
+ 
+    while(DequeSnake.begin()!= (DequeSnake.end()-1) )
+    {
+        DequeSnake.pop_back();
+    }
+       auto NewHead = DequeSnake.front() ;
+       NewHead = glm::vec4(0.0f);
+       DequeSnake.pop_back();
+       DequeSnake.push_front(NewHead);
        snakeDirection = eDirection::LEFT;
    }
+    
     
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && snakeDirection != eDirection::DOWN)
     {
@@ -685,6 +706,18 @@ void processInput(GLFWwindow *window)
    
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_T && action == GLFW_RELEASE)
+    {
+        auto snakeDirectionVec  = GetDirectionVector(snakeDirection);
+        
+        auto CurrentFront = DequeSnake.front() + glm::vec4(snakeDirectionVec.x,snakeDirectionVec.y,snakeDirectionVec.z,0);
+        DequeSnake.push_front(CurrentFront);
+        m_WaitTime = 0;
+    }
+}
+
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -693,6 +726,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
+
 
 
 //SNAKE
