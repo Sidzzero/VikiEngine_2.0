@@ -165,15 +165,18 @@ const float snakeMaxRight = 5.4f;
 const float snakeMaxUp = 5.4f;
 const float snakeMaxDown= -5.4f;
 
-const float snakeUpdateTime = 0.2f;
-
+const float snakeUpdateTime = 0.1f;
+bool bCrash = false;
 std::deque<glm::vec4> DequeSnake;
 glm::mat4 snakeModel(1.0f);
 glm::vec3 headPos;
 eDirection snakeDirection = eDirection::LEFT;
 float m_WaitTime = 0;
 
+bool CheckCollision(glm::vec3 &a_vValue1 , glm::vec3 &a_vValue2);
 
+
+bool CheckSnakeCollision(const std::deque<glm::vec4> &dequeSnake , float &a_fCheckDistance) ;
 //----SNAKE----//
 
 int main(int argc, const char * argv[])
@@ -425,7 +428,11 @@ int main(int argc, const char * argv[])
     DequeSnake.push_back(glm::vec4( 1.01f,   0.0f,  0.0f,1.0f));
     DequeSnake.push_back(glm::vec4( 2.02f,  0.0f, 0.0f,2.0f));
     DequeSnake.push_back(glm::vec4( 3.03f,  0.0f, 0.0f,3.0f));
-    
+    DequeSnake.push_back(glm::vec4( 4.04f,  0.0f, 0.0f,1.0f));
+    DequeSnake.push_back(glm::vec4( 5.05f,  0.0f, 0.0f,2.0f));
+    DequeSnake.push_back(glm::vec4( 6.06f,  0.0f, 0.0f,3.0f));
+    DequeSnake.push_back(glm::vec4( 7.07f,  0.0f, 0.0f,3.0f));
+    DequeSnake.push_back(glm::vec4( 8.08f,  0.0f, 0.0f,3.0f));
     glEnable(GL_DEPTH_TEST);
     float fCurrentTime = 0;
     // render loop
@@ -513,7 +520,7 @@ int main(int argc, const char * argv[])
          */
         //SNAKE
         m_WaitTime+=1.0f*deltaTime;
-        if(m_WaitTime >= snakeUpdateTime)
+        if(m_WaitTime >= snakeUpdateTime && bCrash == false)
         {
          
          m_WaitTime = 0;
@@ -527,8 +534,16 @@ int main(int argc, const char * argv[])
         DequeSnake.push_front(lastTail);//First
        
         //Setup head !
-        std::cout<<"----"<<std::endl;
+          
+        }//ENDs here
+        
+        float CrashDistance = 0;
+        bCrash = CheckSnakeCollision(DequeSnake,CrashDistance);
+        
+        if(bCrash)
+        {
             
+            std::cout<<"CRASH !:"<<CrashDistance<<std::endl;
         }
         glm::mat4 tempMAt = glm::mat4(1.0f);
         int iCount = 0;
@@ -536,20 +551,30 @@ int main(int argc, const char * argv[])
         {
                tempMAt = glm::scale(glm::mat4(1.0f), glm::vec3(0.5));
                tempMAt = glm::translate( tempMAt,glm::vec3(pos.x , pos.y, pos.z) );
-                if(pos.w == 1)
-            shaderMVP.setFloat4("tintColor", 1, 0, 0, 1.0f);
-                else if(pos.w ==2)
-                    shaderMVP.setFloat4("tintColor", 0, 1, 0, 1.0f);
+            if(bCrash == false)
+            {
+                
+            
+                if(iCount == 0)
+            shaderMVP.setFloat4("tintColor", 0, 1.0f, 0, 1.0f);
+                 else if(iCount==DequeSnake.size()-1 )
+                    shaderMVP.setFloat4("tintColor", 1, 0, 0, 1.0f);
                 else
                     shaderMVP.setFloat4("tintColor", 0, 0, 1, 1.0f);
-            shaderMVP.SetMat4("model", glm::value_ptr(tempMAt));
+            
+            }
+            else
+            {
+                shaderMVP.setFloat4("tintColor", 1, 0, 0, 1.0f);
+            }
+                shaderMVP.SetMat4("model", glm::value_ptr(tempMAt));
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texID);
             glBindVertexArray(vaoCube);
       
             glDrawArrays(GL_TRIANGLES , 0 ,6);
                 iCount++;
-                std::cout<<iCount<<":"<<pos.x<<std::endl;
+             //   std::cout<<iCount<<":"<<pos.x<<std::endl;
             
         }
         
@@ -576,11 +601,23 @@ void processInput(GLFWwindow *window)
  
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-   
+   if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+   {
+       bCrash = false;
+       headPos = glm::vec3(1.0f);
+       int iCount = 0;
+       auto size = DequeSnake.size();
+       for(auto it = DequeSnake.begin() ; it!=DequeSnake.end(); ++it )
+       {
+           *it = glm::vec4(0 + 1.01f*iCount, 0, 0 ,(*it).w);
+           iCount++;
+       }
+       snakeDirection = eDirection::LEFT;
+   }
     
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && snakeDirection != eDirection::DOWN)
     {
-    
+       
         snakeDirection = eDirection::UP;
     }
    else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS&& snakeDirection != eDirection::UP)
@@ -622,8 +659,8 @@ void processInput(GLFWwindow *window)
             break;
     }
   
-    std::cout<<headPos.x<<std::endl;
-    std::cout<<headPos.y<<std::endl;
+  //  std::cout<<headPos.x<<std::endl;
+    //std::cout<<headPos.y<<std::endl;
   
     if(headPos.x <snakeMaxLeft)
     {
@@ -655,4 +692,29 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+}
+
+
+//SNAKE
+bool CheckSnakeCollision(const glm::vec3 &a_vValue1 , const glm::vec3 &a_vValue2)
+{
+    return glm::distance(a_vValue1, a_vValue2)<0.001f;
+    
+}
+
+bool CheckSnakeCollision(const std::deque<glm::vec4> &dequeSnake, float &a_fCheckDistance)
+{
+    auto temp_HeadPos =dequeSnake.front();
+    auto headPosVec3 = glm::vec3(temp_HeadPos.x, temp_HeadPos.y, temp_HeadPos.z);
+    for(auto it = dequeSnake.begin()+ 1 ; it!=dequeSnake.end(); ++it )
+    {
+        auto ValueVec4 = *it;
+        a_fCheckDistance =glm::distance(headPosVec3, glm::vec3(ValueVec4.x , ValueVec4.y, ValueVec4.z));
+       if(a_fCheckDistance<=0.001f)
+      {
+          return  true;
+      }
+    }
+    return false;
+    
 }
