@@ -2,6 +2,8 @@
 //
 
 #include <iostream>
+#include <memory>
+using namespace std;
 #include "include/glad/glad.h"
 #include "include/GLFW/glfw3.h"
 
@@ -14,6 +16,8 @@ void processInput(GLFWwindow* window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+
 
 int main()
 {
@@ -47,6 +51,9 @@ int main()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+	
+	unique_ptr <VD_Client> client = make_unique<VD_Client>();
+	client->Init();
 
 	// render loop
 	// -----------
@@ -56,11 +63,16 @@ int main()
 		// -----
 		processInput(window);
 
+		client->Input();
+		client->Update();
+	
+
 		// render
 		// ------
-		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		client->Render();
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
