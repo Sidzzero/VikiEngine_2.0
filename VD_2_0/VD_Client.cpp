@@ -19,6 +19,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 const char* C_SimpleShader = "SimpleShader";
 
 
+
 void VD_Client::Init()
 {
 
@@ -36,6 +37,9 @@ void VD_Client::Init()
 	 CreateBufferWithPositionOnly(square, triangleRenderer);
 
      ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
+     ResourceManager::LoadTexture(".//res//Test.png", true, "TestTexture");
+     ResourceManager::LoadTexture(".//res//Test.png", true, "TestTexture");
+     ResourceManager::LoadShader("ShaderWithTexture",".//res//Shaders//Simple.vert",".//res//Shaders//Simple.frag");
 
      
      //HARDCODED 

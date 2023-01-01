@@ -24,6 +24,7 @@ typedef struct Face
 typedef struct Mesh
 {
 	std::vector<Vertex> vertices;
+	std::vector<UV> UV;
 	std::vector<Face> faces;
 };
 
