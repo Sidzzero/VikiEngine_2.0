@@ -1,6 +1,7 @@
 #include "VD_Client.h"
 #include <iostream>
 
+
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
@@ -15,31 +16,34 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 "}\n\0";
 
-
+const char* C_SimpleShader = "SimpleShader";
 
 
 void VD_Client::Init()
 {
 
-    square.vertices.push_back(Vertex{ 0,0,0 });
-    square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
-    square.vertices.push_back(Vertex{ 0.0f,1.0f,0 });
+   square.vertices.push_back(Vertex{ 0,0,0 });
+   square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
+   square.vertices.push_back(Vertex{ 0.0f,1.0f,0 });
 
 	square.vertices.push_back(Vertex{ 0,0,0 });
 	square.vertices.push_back(Vertex{1.0f,0.0f,0});
 	square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
-
-
 
 	square.faces.push_back(Face{ 0,1,2 });
 
     
 	 CreateBufferWithPositionOnly(square, triangleRenderer);
 
+     ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
+
+     
+     //HARDCODED 
 	/**/
         // build and compile our shader program
     // ------------------------------------
     // vertex shader
+     /*
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
@@ -76,7 +80,7 @@ void VD_Client::Init()
     }
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-	
+	*/
 }
 
 void VD_Client::Input()
@@ -89,7 +93,8 @@ void VD_Client::Update()
 
 void VD_Client::Render()
 {
-    glUseProgram(shaderProgram);
+   // glUseProgram(shaderProgram);
+    ResourceManager::GetShader(C_SimpleShader).Use();
     glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
     glDrawArrays(GL_TRIANGLES, 0, square.vertices.size());
 }

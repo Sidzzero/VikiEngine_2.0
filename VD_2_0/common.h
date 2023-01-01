@@ -6,7 +6,7 @@
 #include <vector>
 
 
- struct Vertex
+typedef struct Vertex
 {
 	float x, y, z;
 } ;
@@ -31,10 +31,13 @@ typedef struct Mesh
 #include "include/glad/glad.h"
 #include "include/GLFW/glfw3.h"
 
-struct Buffer
+typedef struct Buffer
 {
 	unsigned VAO, VBO;
+	 
 };
+
+
 
 const float vertices1[] = {
 	-0.5f, -0.5f, 0.0f, // left  
@@ -62,4 +65,17 @@ void static CreateBufferWithPositionOnly(Mesh &mesh, Buffer &buffer)
 	
 }
 
+
+
+
 #endif
+
+//TODO:
+/*
+- Check EBO
+- Shader Logic
+- Add Texture
+- Convert to Arrays
+- Add GLM and Transfomration logic
+- Add Camera
+*/

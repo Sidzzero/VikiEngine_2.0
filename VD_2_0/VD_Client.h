@@ -2,6 +2,8 @@
 #define VD_CLIENT_H
 #include "Client.h"
 #include "common.h"
+#include "ResourceManager.h"
+
 class VD_Client :
     public Client
 {
