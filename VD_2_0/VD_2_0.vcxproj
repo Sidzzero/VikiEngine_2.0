@@ -141,6 +141,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="VD_2_0.cpp" />
     <ClCompile Include="VD_Client.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="VD_Client.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
