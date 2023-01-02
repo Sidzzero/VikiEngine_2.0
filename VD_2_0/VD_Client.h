@@ -1,8 +1,10 @@
 #ifndef  VD_CLIENT_H
 #define VD_CLIENT_H
+
 #include "Client.h"
 #include "common.h"
 #include "ResourceManager.h"
+#include <iostream>
 
 class VD_Client :
     public Client

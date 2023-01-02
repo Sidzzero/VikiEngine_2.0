@@ -16,7 +16,7 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource)
     sFragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(sFragment, 1, &fragmentSource, NULL);
     glCompileShader(sFragment);
-  
+    checkCompileErrors(sFragment, "FRAGMENT");
 
     // shader program
     this->ID = glCreateProgram();

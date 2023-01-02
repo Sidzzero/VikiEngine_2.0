@@ -1,8 +1,10 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
+
 #include <unordered_map>
 #include "Shader.h"
 #include "Texture2D.h"
+
 class ResourceManager
 {
 private:
@@ -20,6 +22,9 @@ public:
 	static Texture2D GetTexture(std::string name);
 	// properly de-allocates all loaded resources
 	static void      Clear();
+
+
+	static void Test_Texture(unsigned int& texture);
 
 private:
 	static Shader LoadShaderFromFile(const char* VertexShader, const char* FragmentShader);
