@@ -1,6 +1,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <glm/glm/glm.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
+#include <glm/glm/gtc/type_ptr.hpp>
+
 #include <vector>
 #include <iostream>
 
@@ -91,6 +95,8 @@ static void Test_CreatBuffer(Buffer& buffer)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+
 }
 
 
@@ -167,11 +173,12 @@ void static CreateBufferWithPositionAndUVOnly(Mesh& mesh, Buffer& buffer)
 #endif
 
 //TODO:
-/*
-- Check EBO
-- Shader Logic
-- Add Texture
-- Convert to Arrays
-- Add GLM and Transfomration logic
-- Add Camera
+/* 
+* 8_1_2023
+- Check EBO - defferemt
+- Shader Logic - ok
+- Add Texture -ok
+- Convert to Array- oks
+- Add GLM and Transfomration logic - pending
+- Add Camera - pending
 */
