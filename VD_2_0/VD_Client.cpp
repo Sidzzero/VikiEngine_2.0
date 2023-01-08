@@ -29,12 +29,12 @@ void VD_Client::Init()
    square.vertices.push_back(Vertex{ 0.0f,1.0f,0 });
    square.UV.push_back(UV{ 1, 0 });
 
-	//square.vertices.push_back(Vertex{ 0,0,0 });
- //   square.UV.push_back(UV{ 0, 0 });
-	//square.vertices.push_back(Vertex{1.0f,0.0f,0});
- //   square.UV.push_back(UV{ 0, 1 });
-//	square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
- //   square.UV.push_back(UV{ 1, 1 });
+	square.vertices.push_back(Vertex{ 0,0,0 });
+    square.UV.push_back(UV{ 0, 0 });
+	square.vertices.push_back(Vertex{1.0f,0.0f,0});
+    square.UV.push_back(UV{ 0, 1 });
+	square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
+    square.UV.push_back(UV{ 1, 1 });
 
 	square.faces.push_back(Face{ 0,1,2 });
 

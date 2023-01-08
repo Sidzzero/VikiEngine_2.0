@@ -1,10 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-
-
 #include <vector>
-
+#include <iostream>
 
 typedef struct Vertex
 {
@@ -113,36 +111,38 @@ void static CreateBufferWithPositionAndUVOnly(Mesh& mesh, Buffer& buffer)
 	size_t temp_TotalBufferSize = sizeof(std::vector<float>) * mesh.vertices.size() + 
 		                          sizeof(std::vector<UV>)*mesh.UV.size();
 
-	std::vector<float> tempBuffer;
-	for (int i=0;i<mesh.vertices.size(); i++)
+	if (mesh.vertices.size() != mesh.UV.size())
 	{
-		//if (i < mesh.vertices.size())
+		std::cout << "Error:UY count and Vertices Count different:UV:"
+			<< mesh.vertices.size()<<",Vertices:"<< mesh.UV.size();
+	}
+
+	std::vector<float> tempBuffer;
+	for (int i= 0;i< mesh.vertices.size(); i++)
+	{
+		if (i < mesh.vertices.size())
 		{
 			tempBuffer.push_back(mesh.vertices.data()[i].x);
 			tempBuffer.push_back(mesh.vertices.data()[i].y);
 			tempBuffer.push_back(mesh.vertices.data()[i].z);
 		}
 
-	//	if (i < mesh.UV.size())
+		if (i < mesh.UV.size())
 		{
 			tempBuffer.push_back(mesh.UV.data()[i].u);
 			tempBuffer.push_back(mesh.UV.data()[i].v);
 		}
 	}
-	for (int i = 0; i < mesh.UV.size(); i++)
-	{
-	//	tempBuffer.push_back(mesh.UV.data()[i].u);
-	//	tempBuffer.push_back(mesh.UV.data()[i].v);
 	
-	}
 
 	
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * tempBuffer.size(), &tempBuffer.front(), GL_STATIC_DRAW);
 	// 2. copy our vertices array in a buffer for OpenGL to use
 	// 3. then set our vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// Looks like it takes row by row so mention row size 5*float and starting point in them
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	//UV
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 
 		                (void*) ( sizeof(float)*3) );
 
 
@@ -155,6 +155,7 @@ void static CreateBufferWithPositionAndUVOnly(Mesh& mesh, Buffer& buffer)
 	*/
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
