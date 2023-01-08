@@ -114,27 +114,36 @@ void static CreateBufferWithPositionAndUVOnly(Mesh& mesh, Buffer& buffer)
 		                          sizeof(std::vector<UV>)*mesh.UV.size();
 
 	std::vector<float> tempBuffer;
-	for (int i=0;i<mesh.vertices.size();i++)
+	for (int i=0;i<mesh.vertices.size(); i++)
 	{
-		tempBuffer.push_back(mesh.vertices.data()[i].x);
-		tempBuffer.push_back(mesh.vertices.data()[i].y);
-		tempBuffer.push_back(mesh.vertices.data()[i].z);
+		//if (i < mesh.vertices.size())
+		{
+			tempBuffer.push_back(mesh.vertices.data()[i].x);
+			tempBuffer.push_back(mesh.vertices.data()[i].y);
+			tempBuffer.push_back(mesh.vertices.data()[i].z);
+		}
+
+	//	if (i < mesh.UV.size())
+		{
+			tempBuffer.push_back(mesh.UV.data()[i].u);
+			tempBuffer.push_back(mesh.UV.data()[i].v);
+		}
 	}
 	for (int i = 0; i < mesh.UV.size(); i++)
 	{
-		tempBuffer.push_back(mesh.UV.data()[i].u);
-		tempBuffer.push_back(mesh.UV.data()[i].v);
+	//	tempBuffer.push_back(mesh.UV.data()[i].u);
+	//	tempBuffer.push_back(mesh.UV.data()[i].v);
 	
 	}
 
 	
-	glBufferData(GL_ARRAY_BUFFER, sizeof(std::vector<float>) * tempBuffer.size(), tempBuffer.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * tempBuffer.size(), &tempBuffer.front(), GL_STATIC_DRAW);
 	// 2. copy our vertices array in a buffer for OpenGL to use
 	// 3. then set our vertex attributes pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	//UV
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 
-		                (void*) (sizeof(std::vector<float>)*(mesh.vertices.size()) ));
+		                (void*) ( sizeof(float)*3) );
 
 
 	/*
