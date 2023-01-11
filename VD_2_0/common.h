@@ -11,7 +11,7 @@
 typedef struct Vertex
 {
 	float x, y, z;
-} ;
+};
 
  typedef struct UV
 {
@@ -21,13 +21,24 @@ typedef struct Vertex
 typedef struct Face
 {
 	unsigned int i1,i2,i3;
-} ;
+};
+
+typedef struct Transformation
+{
+	glm::vec3 Position;
+	glm::vec3 Rotation;
+	glm::vec3 Size;
+
+};
+
 //https://www.khronos.org/opengl/wiki/Vertex_Specification#Interleaved_arrays
 typedef struct Mesh
 {
 	std::vector<Vertex> vertices;
 	std::vector<UV> UV;
 	std::vector<Face> faces;
+
+	Transformation transform;
 };
 
 
