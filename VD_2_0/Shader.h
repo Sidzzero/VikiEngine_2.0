@@ -7,12 +7,12 @@ class Shader
 {
 public:
 	Shader();
-	unsigned int ID;
 	void Use();
 	void Compile(const char* vertexSource, const char* fragmentSource);
+	int GetID();
 private:
 	void checkCompileErrors(unsigned int object, std::string type);
-
+	unsigned int ID;
 	//Functions for settings uniforms...
 
 };

@@ -62,3 +62,8 @@ void Shader::Use()
 {
 	glUseProgram(ID);
 }
+
+ int Shader::GetID()
+{
+     return ID;
+}

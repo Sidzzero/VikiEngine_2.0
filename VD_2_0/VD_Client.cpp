@@ -48,7 +48,7 @@ void VD_Client::Init()
    
      ResourceManager::LoadShader("ShaderWithTexture",".//res//Shaders//Simple.vert",".//res//Shaders//Simple.frag");
 
-
+     ResourceManager::LoadShader("ShaderWithTextureAndTransform", ".//res//Shaders//Simple_Transform.vert", ".//res//Shaders//Simple_Transform.frag");
 }
 
 void VD_Client::Input()
@@ -68,7 +68,14 @@ void VD_Client::Render()
 
   //  glBindTexture(GL_TEXTURE_2D, textureID);
 
-    ResourceManager::GetShader("ShaderWithTexture").Use();
+    ResourceManager::GetShader("ShaderWithTextureAndTransform").Use();
     glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+    unsigned int transformLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderWithTextureAndTransform").GetID(), "transform");
+    // create transformations
+    glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
     glDrawArrays(GL_TRIANGLES, 0, square.vertices.size());
 }

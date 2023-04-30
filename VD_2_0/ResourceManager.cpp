@@ -80,7 +80,7 @@ void ResourceManager::Clear()
 {
 	// (properly) delete all shaders	
 	for (auto iter : m_Shaders)
-		glDeleteProgram(iter.second.ID);
+		glDeleteProgram(iter.second.GetID());
 	// (properly) delete all textures
 	for (auto iter : m_Textures)
 		glDeleteTextures(1, &iter.second.ID);
