@@ -47,7 +47,7 @@ typedef struct Mesh
 
 typedef struct Buffer
 {
-	unsigned VAO, VBO;
+	unsigned VAO, VBO;// TODO: Should i remove vbo since vao is more important ?
 	 
 };
 
@@ -133,7 +133,7 @@ void static CreateBufferWithPositionAndUVOnly(Mesh& mesh, Buffer& buffer)
 		std::cout << "Error:UY count and Vertices Count different:UV:"
 			<< mesh.vertices.size()<<",Vertices:"<< mesh.UV.size();
 	}
-
+	// x y z u v (layout)
 	std::vector<float> tempBuffer;
 	for (int i= 0;i< mesh.vertices.size(); i++)
 	{
@@ -163,13 +163,7 @@ void static CreateBufferWithPositionAndUVOnly(Mesh& mesh, Buffer& buffer)
 		                (void*) ( sizeof(float)*3) );
 
 
-	/*
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesUV), verticesUV, GL_STATIC_DRAW);
-	// 2. copy our vertices array in a buffer for OpenGL to use
-	// 3. then set our vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	*/
+	
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 

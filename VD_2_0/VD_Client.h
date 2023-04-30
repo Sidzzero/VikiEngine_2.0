@@ -16,6 +16,7 @@ public:
 	 void Update() override;
 	 void Render() override;
 
+	 //TODO: MAke a scene manager
 	 Mesh square;
 	 Buffer triangleRenderer;
 	 unsigned int shaderProgram;
