@@ -71,7 +71,7 @@ void VD_Client::Render()
   //  glBindTexture(GL_TEXTURE_2D, textureID);
 
     ResourceManager::GetShader("ShaderMVP").Use();
-   
+    glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
 
     glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -92,6 +92,6 @@ void VD_Client::Render()
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
    
-    glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+  
     glDrawArrays(GL_TRIANGLES, 0, square.vertices.size());
 }
