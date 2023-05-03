@@ -21,6 +21,9 @@ public:
 	 Buffer triangleRenderer;
 	 unsigned int shaderProgram;
 
+	 Mesh Cube;
+	 Buffer cubeRenderer;
+
 private:
 
 };

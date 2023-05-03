@@ -54,7 +54,7 @@ int main()
 	
 	unique_ptr <VD_Client> client = make_unique<VD_Client>();
 	client->Init();
-
+	glEnable(GL_DEPTH_TEST);
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -70,7 +70,7 @@ int main()
 		// render
 		// ------
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		client->Render();
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

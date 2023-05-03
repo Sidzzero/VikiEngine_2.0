@@ -37,11 +37,66 @@ void VD_Client::Init()
     square.UV.push_back(UV{ 1, 1 });
 
 	square.faces.push_back(Face{ 0,1,2 });
+    //Cube declaration
 
+    float Cubevertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+    int temp_iAlignCounter = 0;
+    for (int i=0;i<(180);i+=5)
+    {
+        temp_iAlignCounter++;
+        Cube.vertices.push_back(Vertex{ Cubevertices[i],
+                Cubevertices[i+1],
+                 Cubevertices[i + 2] }
+            );
+        Cube.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
+        
+    }
     
-	// CreateBufferWithPositionOnly(square, triangleRenderer);
-    // Test_CreatBuffer(triangleRenderer);
-    CreateBufferWithPositionAndUVOnly(square,triangleRenderer);
+	
+    CreateBufferWithPositionAndUVOnly(square, triangleRenderer);
+    CreateBufferWithPositionAndUVOnly(Cube,cubeRenderer);
 
     // ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
      ResourceManager::LoadTexture(".//res//Test.jpg", false, "TestTexture");
@@ -71,16 +126,16 @@ void VD_Client::Render()
   //  glBindTexture(GL_TEXTURE_2D, textureID);
 
     ResourceManager::GetShader("ShaderMVP").Use();
-    glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+   // glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
-
+    glBindVertexArray(cubeRenderer.VAO);
     glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
 
-   // model = glm::rotate(model, glm::radians(95.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  
     model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -7.0f));
     projection = glm::perspective(glm::radians(45.0f), ((float)800/(float)600), 0.1f, 100.0f);
 
     unsigned int modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");
@@ -93,5 +148,6 @@ void VD_Client::Render()
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
    
   
-    glDrawArrays(GL_TRIANGLES, 0, square.vertices.size());
+   // glDrawArrays(GL_TRIANGLES, 0, square.vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, Cube.vertices.size());
 }
