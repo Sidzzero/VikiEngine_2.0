@@ -12,8 +12,8 @@ class VD_Client :
 public:
 	 void Init() override;
 
-	 void Input() override;
-	 void Update() override;
+	 void Input(float dt) override;
+	 void Update(float dt) override;
 	 void Render() override;
 
 	 //TODO: MAke a scene manager

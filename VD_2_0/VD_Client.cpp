@@ -119,11 +119,11 @@ void VD_Client::Init()
      ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_MVP.frag");
 }
 
-void VD_Client::Input()
+void VD_Client::Input(float dt)
 {
 }
 
-void VD_Client::Update()
+void VD_Client::Update(float dt)
 {
 }
 

@@ -55,16 +55,21 @@ int main()
 	unique_ptr <VD_Client> client = make_unique<VD_Client>();
 	client->Init();
 	glEnable(GL_DEPTH_TEST);
+	float deltaTime = 0.0f;	// Time between current frame and last frame
+	float lastFrame = 0.0f; // Time of last frame
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 		// input
 		// -----
 		processInput(window);
 
-		client->Input();
-		client->Update();
+		client->Input(deltaTime);
+		client->Update(deltaTime);
 	
 
 		// render
@@ -77,6 +82,7 @@ int main()
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+	
 	}
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
