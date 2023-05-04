@@ -32,7 +32,7 @@ const char* C_SimpleShader = "SimpleShader";
 //unsigned int textureID;
 void VD_Client::Init(GLFWwindow* a_window)
 {
-
+    m_window = a_window;
    square.vertices.push_back(Vertex{ 0,0,0 });
    square.UV.push_back(UV{ 0, 0 });
    square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
@@ -125,6 +125,23 @@ void VD_Client::Input(float dt)
 
 void VD_Client::Update(float dt)
 {
+   
+    if (glfwGetKey(m_window,GLFW_KEY_UP)== GLFW_PRESS)
+    {
+        cam.vPosition += cam.vFront * cam.KeyboardSentivity*dt;
+    }
+    else  if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        cam.vPosition -= cam.vFront * cam.KeyboardSentivity * dt;
+    }
+      if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        cam.vPosition -= cam.vRight * cam.KeyboardSentivity * dt;
+    }
+    else if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        cam.vPosition += cam.vRight * cam.KeyboardSentivity * dt;
+    }
 }
 
 void VD_Client::Render()
@@ -147,6 +164,7 @@ void VD_Client::Render()
   
     model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -7.0f));
+    view = cam.GetViewMat();
     projection = glm::perspective(glm::radians(45.0f), ((float)800/(float)600), 0.1f, 100.0f);
 
     unsigned int modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");

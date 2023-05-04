@@ -5,7 +5,7 @@
 #include "common.h"
 #include "ResourceManager.h"
 #include <iostream>
-
+#include "Camera.h"
 class VD_Client :
     public Client
 {
@@ -24,6 +24,7 @@ public:
 	 Mesh Cube;
 	 Buffer cubeRenderer;
 
+	 Camera cam;
 
 private:
 

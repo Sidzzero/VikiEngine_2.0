@@ -10,7 +10,7 @@ public:
 	virtual void Input(float dt) = 0;
 	virtual void Update(float dt) = 0;
 	virtual void Render() = 0;
-private:
+protected:
 	GLFWwindow *m_window;//TODO: do we need it here
 
 };
