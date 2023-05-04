@@ -16,6 +16,7 @@ private:
 	float yaw;
 
 	float mouseSentivity;
+	float KeyboardSentivity;
 	float zoomSentivity;
 
 };

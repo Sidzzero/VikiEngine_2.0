@@ -30,7 +30,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 const char* C_SimpleShader = "SimpleShader";
 
 //unsigned int textureID;
-void VD_Client::Init()
+void VD_Client::Init(GLFWwindow* a_window)
 {
 
    square.vertices.push_back(Vertex{ 0,0,0 });

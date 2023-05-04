@@ -10,7 +10,7 @@ class VD_Client :
     public Client
 {
 public:
-	 void Init() override;
+	 void Init(GLFWwindow* a_window) override;
 
 	 void Input(float dt) override;
 	 void Update(float dt) override;

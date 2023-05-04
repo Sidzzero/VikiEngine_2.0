@@ -11,5 +11,5 @@ glm::mat4 Camera::GetViewMat()
 
 void Camera::updateCameraTransform()
 {
-
+	
 }

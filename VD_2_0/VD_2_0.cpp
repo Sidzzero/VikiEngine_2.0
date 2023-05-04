@@ -53,7 +53,7 @@ int main()
 	}
 	
 	unique_ptr <VD_Client> client = make_unique<VD_Client>();
-	client->Init();
+	client->Init(window);
 	glEnable(GL_DEPTH_TEST);
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrame = 0.0f; // Time of last frame
