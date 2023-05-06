@@ -11,6 +11,7 @@ public:
 	glm::vec3 vRight;
 	float pitch;
 	float yaw;
+	
 
 	float mouseSentivity = 0.5f;
 	float KeyboardSentivity = 0.5f;

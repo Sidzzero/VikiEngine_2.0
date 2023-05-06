@@ -25,8 +25,10 @@ public:
 	 Buffer cubeRenderer;
 
 	 Camera cam;
-
+	 float xLast = 300, yLast = 300;
 private:
 
+	
+	
 };
 #endif

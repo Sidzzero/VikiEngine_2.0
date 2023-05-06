@@ -28,11 +28,40 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "}\n\0";
 
 const char* C_SimpleShader = "SimpleShader";
+static VD_Client* instance = nullptr;
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+   if(instance != nullptr)
+   {
+       auto cam = instance->cam;
+       float Xpos = xpos - instance->xLast;
+       float Ypos = ypos - instance->yLast;
+       instance->xLast = xpos;
+       instance->yLast = ypos;
+       cam.pitch += (Xpos* cam.mouseSentivity);
+       cam.yaw += (Ypos* 0.02f);
+       std::cout<< cam.yaw <<std::endl;
+       if (cam.yaw<-89.0f)
+       {
+           cam.yaw = -89.0f;
+       } 
+       else if (cam.yaw > 89.0f)
+       {
+           cam.yaw = 89.0f;
+       }
+       glm::vec3 direction;
+       direction.y = glm::sin(glm::radians( cam.yaw));
 
+       cam.vFront = glm::normalize(direction);
+   }
+}
 //unsigned int textureID;
 void VD_Client::Init(GLFWwindow* a_window)
 {
     m_window = a_window;
+    instance = this;
+   
+
    square.vertices.push_back(Vertex{ 0,0,0 });
    square.UV.push_back(UV{ 0, 0 });
    square.vertices.push_back(Vertex{ 1.0f,1.0f,0 });
@@ -117,6 +146,9 @@ void VD_Client::Init(GLFWwindow* a_window)
      ResourceManager::LoadShader("ShaderWithTextureAndTransform", ".//res//Shaders//Simple_Transform.vert", ".//res//Shaders//Simple_Transform.frag");
 
      ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_MVP.frag");
+
+
+     glfwSetCursorPosCallback(a_window, mouse_callback);
 }
 
 void VD_Client::Input(float dt)
@@ -136,12 +168,16 @@ void VD_Client::Update(float dt)
     }
       if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
-        cam.vPosition -= cam.vRight * cam.KeyboardSentivity * dt;
+          //TODO :Check why so
+        //cam.vPosition += cam.vRight * cam.KeyboardSentivity * dt;
+        cam.vPosition+=glm::normalize(glm::cross(cam.vFront,cam.vUp))*cam.KeyboardSentivity * dt;
     }
     else if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS)
     {
-        cam.vPosition += cam.vRight * cam.KeyboardSentivity * dt;
+          cam.vPosition -= glm::normalize(glm::cross(cam.vFront, cam.vUp)) * cam.KeyboardSentivity * dt;
     }
+
+
 }
 
 void VD_Client::Render()
