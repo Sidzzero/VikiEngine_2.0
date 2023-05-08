@@ -29,30 +29,51 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 const char* C_SimpleShader = "SimpleShader";
 static VD_Client* instance = nullptr;
+bool bFirst = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
    if(instance != nullptr)
    {
-       auto cam = instance->cam;
+      
+       auto cam = &(instance->cam);
+       if (!bFirst)
+       {
+           instance->xLast = xpos;
+           instance->yLast = ypos;
+           
+       }
        float Xpos = xpos - instance->xLast;
-       float Ypos = ypos - instance->yLast;
+       float Ypos =  instance->yLast - ypos;
        instance->xLast = xpos;
        instance->yLast = ypos;
-       cam.pitch += (Xpos* cam.mouseSentivity);
-       cam.yaw += (Ypos* 0.02f);
-       std::cout<< cam.yaw <<std::endl;
-       if (cam.yaw<-89.0f)
+       cam->pitch += ( Ypos *cam->mouseSentivity);
+       cam->yaw += (Xpos * cam->mouseSentivity);
+       std::cout<< cam->yaw <<std::endl;
+       if (cam->pitch <-89.0f)
        {
-           cam.yaw = -89.0f;
+           cam->pitch = -89.0f;
        } 
-       else if (cam.yaw > 89.0f)
+       else if (cam->pitch > 89.0f)
        {
-           cam.yaw = 89.0f;
+           cam->pitch = 89.0f;
        }
-       glm::vec3 direction;
-       direction.y = glm::sin(glm::radians( cam.yaw));
+     
+       cam->vFront.y = glm::sin(glm::radians(cam->pitch));
 
-       cam.vFront = glm::normalize(direction);
+       cam->vFront.x = glm::cos(glm::radians(cam->yaw)) *
+                      glm::cos(glm::radians(cam->pitch));
+
+      cam->vFront.z = glm::sin(glm::radians( cam->yaw)) *
+           glm::cos(glm::radians(cam->pitch));
+      if (bFirst == false)
+      {
+          cam->vFront = glm::vec3(0, 0, 1);
+          bFirst = true;
+        
+      }
+      cam->vFront = glm::normalize(cam->vFront);
+
+       
    }
 }
 //unsigned int textureID;
