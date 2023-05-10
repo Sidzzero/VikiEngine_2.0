@@ -260,7 +260,8 @@ void VD_Client::Render()
     Lightmodel = glm::translate(Lightmodel, glm::vec3(0,0,0));
    
    
-    modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "model");
+    modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLigh
+        t").GetID(), "model");
      viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "view");
       projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "projection");
     unsigned int baseColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "baseColor");
