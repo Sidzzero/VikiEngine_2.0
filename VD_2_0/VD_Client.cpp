@@ -32,6 +32,7 @@ static VD_Client* instance = nullptr;
 bool bFirst = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    return;
    if(instance != nullptr)
    {
       
@@ -152,12 +153,20 @@ void VD_Client::Init(GLFWwindow* a_window)
                  Cubevertices[i + 2] }
             );
         Cube.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
+
+        //
+        LighPosition.vertices.push_back(Vertex{ Cubevertices[i],
+             Cubevertices[i + 1],
+              Cubevertices[i + 2] }
+        );
+        LighPosition.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
         
     }
     
 	
     CreateBufferWithPositionAndUVOnly(square, triangleRenderer);
-    CreateBufferWithPositionAndUVOnly(Cube,cubeRenderer);
+    CreateBufferWithPositionAndUVOnly(Cube, cubeRenderer);
+    CreateBufferWithPositionAndUVOnly(LighPosition, lightRenderer);
 
     // ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
      ResourceManager::LoadTexture(".//res//Test.jpg", false, "TestTexture");
@@ -168,6 +177,8 @@ void VD_Client::Init(GLFWwindow* a_window)
 
      ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_MVP.frag");
 
+     //Light Shader
+     ResourceManager::LoadShader("ShaderForLight", ".//res//Shaders//Simple_Color_MVP.vert", ".//res//Shaders//Simple_Color_MVP.frag");
 
      glfwSetCursorPosCallback(a_window, mouse_callback);
 }
@@ -232,17 +243,34 @@ void VD_Client::Render()
     //glUniformMatrix4fv(model//Loc, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    for (unsigned int i = 0; i < 10; i++)
+    for (unsigned int i = 0; i < 1; i++)
     {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
+        model = glm::translate(model, glm::vec3(3.0f,0,0));
         float angle = 20.0f * i;
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
         glDrawArrays(GL_TRIANGLES, 0, Cube.vertices.size());
     }
-  
-   // glDrawArrays(GL_TRIANGLES, 0, square.vertices.size());
+   
+    //-----------Light Position---------------------
+    ResourceManager::GetShader("ShaderForLight").Use();
+    glm::mat4 Lightmodel = glm::mat4(1.0f);
+    Lightmodel = glm::translate(Lightmodel, glm::vec3(0,0,0));
+   
+   
+    modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "model");
+     viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "view");
+      projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "projection");
+    unsigned int baseColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "baseColor");
+
+      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(Lightmodel));
+      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+      glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform4f(baseColorLoc, 1.0f,0,0,1.0f);
+
+    glBindVertexArray(lightRenderer.VAO);
+    glDrawArrays(GL_TRIANGLES, 0, LighPosition.vertices.size());
    
 }

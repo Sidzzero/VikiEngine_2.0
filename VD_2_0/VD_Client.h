@@ -26,6 +26,9 @@ public:
 
 	 Camera cam;
 	 float xLast = 300, yLast = 300;
+
+	 Mesh LighPosition;
+	 Buffer lightRenderer;
 private:
 
 	

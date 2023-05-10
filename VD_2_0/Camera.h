@@ -14,7 +14,7 @@ public:
 	
 
 	float mouseSentivity = 0.5f;
-	float KeyboardSentivity = 0.5f;
+	float KeyboardSentivity = 1.2f;
 	float zoomSentivity = 0.5f;
 
 
