@@ -27,8 +27,9 @@ public:
 	 Camera cam;
 	 float xLast = 300, yLast = 300;
 
-	 Mesh LighPosition;
+	 Mesh LightCube;
 	 Buffer lightRenderer;
+	 glm::vec3 lightPosition;
 private:
 
 	

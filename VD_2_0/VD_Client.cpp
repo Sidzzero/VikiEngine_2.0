@@ -155,18 +155,18 @@ void VD_Client::Init(GLFWwindow* a_window)
         Cube.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
 
         //
-        LighPosition.vertices.push_back(Vertex{ Cubevertices[i],
+        LightCube.vertices.push_back(Vertex{ Cubevertices[i],
              Cubevertices[i + 1],
               Cubevertices[i + 2] }
         );
-        LighPosition.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
+        LightCube.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
         
     }
     
 	
     CreateBufferWithPositionAndUVOnly(square, triangleRenderer);
     CreateBufferWithPositionAndUVOnly(Cube, cubeRenderer);
-    CreateBufferWithPositionAndUVOnly(LighPosition, lightRenderer);
+    CreateBufferWithPositionAndUVOnly(LightCube, lightRenderer);
 
     // ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
      ResourceManager::LoadTexture(".//res//Test.jpg", false, "TestTexture");
@@ -255,22 +255,25 @@ void VD_Client::Render()
     }
    
     //-----------Light Position---------------------
+    lightPosition = glm::vec3(1.2f,1.0f,2.0f);
     ResourceManager::GetShader("ShaderForLight").Use();
-    glm::mat4 Lightmodel = glm::mat4(1.0f);
-    Lightmodel = glm::translate(Lightmodel, glm::vec3(0,0,0));
+    glm::mat4 modelLightPos = glm::mat4(1.0f);
+    modelLightPos = glm::translate(modelLightPos, lightPosition);
+    modelLightPos = glm::scale(modelLightPos, glm::vec3(0.2f));
    
-   
+   //Get Uniform
     modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "model");
      viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "view");
       projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "projection");
-    unsigned int baseColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "baseColor");
+    unsigned int baseColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "objectColor");
 
-      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(Lightmodel));
+
+      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelLightPos));
       glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(baseColorLoc, 1.0f,0,0,1.0f);
 
     glBindVertexArray(lightRenderer.VAO);
-    glDrawArrays(GL_TRIANGLES, 0, LighPosition.vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, LightCube.vertices.size());
    
 }
