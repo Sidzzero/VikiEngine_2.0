@@ -175,10 +175,13 @@ void VD_Client::Init(GLFWwindow* a_window)
 
      ResourceManager::LoadShader("ShaderWithTextureAndTransform", ".//res//Shaders//Simple_Transform.vert", ".//res//Shaders//Simple_Transform.frag");
 
-     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_MVP.frag");
+   //  ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_MVP.frag");
 
      //Light Shader
      ResourceManager::LoadShader("ShaderForLight", ".//res//Shaders//Simple_Color_MVP.vert", ".//res//Shaders//Simple_Color_MVP.frag");
+
+     //Object Phong Lighting object
+     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_Phong_MVP.frag");
 
      glfwSetCursorPosCallback(a_window, mouse_callback);
 }
@@ -238,6 +241,9 @@ void VD_Client::Render()
     unsigned int modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");
     unsigned int viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "view");
     unsigned int projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "projection");
+    //Lighting the Object
+    unsigned int baseColorObjectLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "objectColor");
+    glUniform4f(baseColorObjectLoc, 1.0f, 0, 0, 1.0f);
    
     
     //glUniformMatrix4fv(model//Loc, 1, GL_FALSE, glm::value_ptr(model));
