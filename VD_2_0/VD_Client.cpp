@@ -284,7 +284,7 @@ void VD_Client::Render()
     ResourceManager::GetShader("ShaderMVP").Use();
    // glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
-   // glBindVertexArray(cubeRenderer.VAO);//---REusing
+   // glBindVertexArray(cubeRenderer.VAO);//---REusing //TODO: We used same set of calls to create this cube
     glBindVertexArray(cubeWithNormalRenderer.VAO);
     glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
     glm::mat4 view = glm::mat4(1.0f);
