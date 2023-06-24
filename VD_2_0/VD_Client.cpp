@@ -289,7 +289,9 @@ void VD_Client::Render()
     ResourceManager::GetTexture("TestTexture").Bind();
 
     //-----------Light Position---------------------
-    lightPosition = glm::vec3(0.0f, 0.0f, -3.0f);
+    glBindVertexArray(lightRenderer.VAO);
+  
+    lightPosition = glm::vec3(1.0f, 0.0f, -3.0f);
     ResourceManager::GetShader("ShaderForLight").Use();
     glm::mat4 modelLightPos = glm::mat4(1.0f);
     modelLightPos = glm::translate(modelLightPos, lightPosition);
@@ -307,7 +309,7 @@ void VD_Client::Render()
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(baseColorLoc,1,1,1, lightColor.w);
 
-    glBindVertexArray(lightRenderer.VAO);
+  
     glDrawArrays(GL_TRIANGLES, 0, LightCube.vertices.size());
     //--------------Light Ends Here
 
@@ -317,7 +319,7 @@ void VD_Client::Render()
    // glBindVertexArray(cubeRenderer.VAO);//---REusing //TODO: We used same set of calls to create this cube
     glBindVertexArray(cubeWithNormalRenderer.VAO);
     model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+   // model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
      modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");
    viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "view");
