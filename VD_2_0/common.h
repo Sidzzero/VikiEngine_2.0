@@ -196,7 +196,7 @@ void static CreateBufferWithPositionUVNormalOnly(Mesh& mesh, Buffer& buffer)
 		std::cout << "Error:UY count and Vertices Count different:UV:"
 			<< mesh.vertices.size() << ",Vertices:" << mesh.UV.size();
 	}
-	// x y z u v (layout)
+	// x y z u v  xn yn zn (layout)
 	std::vector<float> tempBuffer;
 	for (int i = 0; i < mesh.vertices.size(); i++)
 	{

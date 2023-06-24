@@ -274,70 +274,81 @@ void VD_Client::Update(float dt)
 
 void VD_Client::Render()
 {
-   // glUseProgram(shaderProgram);
+    unsigned int modelLoc, viewLoc, projLoc , objectColorLoc,lightPosLoc , lightColorLoc;
+    glm::vec4 lightColor = glm::vec4(1.0f, 0, 0, 1.0f);
+    glm::vec4 objectColor = glm::vec4(1.0f,0,0,1.0f);
+
+    glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 projection = glm::mat4(1.0f);
+    //Scene Setup
+    view = cam.GetViewMat();
+    projection = glm::perspective(glm::radians(45.0f), ((float)800 / (float)600), 0.1f, 100.0f);
 
     glActiveTexture(GL_TEXTURE0);
     ResourceManager::GetTexture("TestTexture").Bind();
 
-  //  glBindTexture(GL_TEXTURE_2D, textureID);
-
-    ResourceManager::GetShader("ShaderMVP").Use();
-   // glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-
-   // glBindVertexArray(cubeRenderer.VAO);//---REusing //TODO: We used same set of calls to create this cube
-    glBindVertexArray(cubeWithNormalRenderer.VAO);
-    glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 projection = glm::mat4(1.0f);
-
-  
-    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -7.0f));
-    view = cam.GetViewMat();
-    projection = glm::perspective(glm::radians(45.0f), ((float)800/(float)600), 0.1f, 100.0f);
-
-    unsigned int modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");
-    unsigned int viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "view");
-    unsigned int projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "projection");
-    //Lighting the Object
-    unsigned int baseColorObjectLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "objectColor");
-    glUniform4f(baseColorObjectLoc, 1.0f, 0, 0, 1.0f);
-   
-    
-    //glUniformMatrix4fv(model//Loc, 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    for (unsigned int i = 0; i < 1; i++)
-    {
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3.0f,0,0));
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-        glDrawArrays(GL_TRIANGLES, 0, Cube.vertices.size());
-    }
-   
     //-----------Light Position---------------------
-    lightPosition = glm::vec3(1.2f,1.0f,2.0f);
+    lightPosition = glm::vec3(0.0f, 0.0f, -3.0f);
     ResourceManager::GetShader("ShaderForLight").Use();
     glm::mat4 modelLightPos = glm::mat4(1.0f);
     modelLightPos = glm::translate(modelLightPos, lightPosition);
-    modelLightPos = glm::scale(modelLightPos, glm::vec3(0.2f));
-   
-   //Get Uniform
+    modelLightPos = glm::scale(modelLightPos, glm::vec3(0.1f));
+
+    //Get Uniform
     modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "model");
-     viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "view");
-      projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "projection");
+    viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "view");
+    projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "projection");
     unsigned int baseColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "objectColor");
 
 
-      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelLightPos));
-      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-      glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform4f(baseColorLoc, 1.0f,0,0,1.0f);
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelLightPos));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform4f(baseColorLoc,1,1,1, lightColor.w);
 
     glBindVertexArray(lightRenderer.VAO);
     glDrawArrays(GL_TRIANGLES, 0, LightCube.vertices.size());
+    //--------------Light Ends Here
+
+
+    //-----------object 
+    ResourceManager::GetShader("ShaderMVP").Use();
+   // glBindVertexArray(cubeRenderer.VAO);//---REusing //TODO: We used same set of calls to create this cube
+    glBindVertexArray(cubeWithNormalRenderer.VAO);
+    model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+
+     modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");
+   viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "view");
+    projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "projection");
+    //Lighting the Object
+    objectColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "objectColor");
+    lightColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "lightColor");
+    lightPosLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "lightPos");
+    //TODO: ALWays object color is 3
+    glUniform3f(objectColorLoc, objectColor.x, objectColor.y, objectColor.z);
+    glUniform3f(lightColorLoc, lightColor.x, lightColor.y, lightColor.z);
+    glUniform3f(lightPosLoc, lightPosition.x, lightPosition.y, lightPosition.z);
+   
+    
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
+    /*for (unsigned int i = 0; i < 1; i++)
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f,0,0));
+        float angle = 20.0f * i;
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.5f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    
+    }
+    */
+   
+
    
 }
