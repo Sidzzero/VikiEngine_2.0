@@ -144,6 +144,50 @@ void VD_Client::Init(GLFWwindow* a_window)
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+
+    float cubeWithNormal[] = {
+   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f ,0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,0.0f,  0.0f, -1.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,-1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,-1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,-1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,-1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,-1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,-1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,0.0f,  1.0f,  0.0f
+    };
     int temp_iAlignCounter = 0;
     for (int i=0;i<(180);i+=5)
     {
@@ -162,11 +206,24 @@ void VD_Client::Init(GLFWwindow* a_window)
         LightCube.UV.push_back(UV{ Cubevertices[i + 3], Cubevertices[i + 4] });
         
     }
+    temp_iAlignCounter = 0;
+    for (int i=0;i<(6*6*8);i+=8)
+    {
+        temp_iAlignCounter++;
+        CubeWithNormal.vertices.push_back(Vertex{ cubeWithNormal[i],
+                cubeWithNormal[i + 1],
+                 cubeWithNormal[i + 2] });
+
+        CubeWithNormal.UV.push_back(UV{ cubeWithNormal[i + 3], cubeWithNormal[i + 4] });
+        CubeWithNormal.normal.push_back(Vertex{ cubeWithNormal[i + 5],
+            cubeWithNormal[i + 6],cubeWithNormal[i + 7] });
+    }
     
 	
     CreateBufferWithPositionAndUVOnly(square, triangleRenderer);
     CreateBufferWithPositionAndUVOnly(Cube, cubeRenderer);
     CreateBufferWithPositionAndUVOnly(LightCube, lightRenderer);
+    CreateBufferWithPositionUVNormalOnly(CubeWithNormal,cubeWithNormalRenderer);
 
     // ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
      ResourceManager::LoadTexture(".//res//Test.jpg", false, "TestTexture");
@@ -181,7 +238,7 @@ void VD_Client::Init(GLFWwindow* a_window)
      ResourceManager::LoadShader("ShaderForLight", ".//res//Shaders//Simple_Color_MVP.vert", ".//res//Shaders//Simple_Color_MVP.frag");
 
      //Object Phong Lighting object
-     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_MVP.vert", ".//res//Shaders//Simple_Phong_MVP.frag");
+     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_Phong_MVP.vert", ".//res//Shaders//Simple_Phong_MVP.frag");
 
      glfwSetCursorPosCallback(a_window, mouse_callback);
 }
@@ -227,7 +284,8 @@ void VD_Client::Render()
     ResourceManager::GetShader("ShaderMVP").Use();
    // glBindVertexArray(triangleRenderer.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
-    glBindVertexArray(cubeRenderer.VAO);
+   // glBindVertexArray(cubeRenderer.VAO);//---REusing
+    glBindVertexArray(cubeWithNormalRenderer.VAO);
     glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);

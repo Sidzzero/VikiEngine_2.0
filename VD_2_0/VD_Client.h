@@ -30,6 +30,9 @@ public:
 	 Mesh LightCube;
 	 Buffer lightRenderer;
 	 glm::vec3 lightPosition;
+
+	 Mesh CubeWithNormal;
+	 Buffer cubeWithNormalRenderer;
 private:
 
 	
