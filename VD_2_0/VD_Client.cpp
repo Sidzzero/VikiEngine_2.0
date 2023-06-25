@@ -32,7 +32,7 @@ static VD_Client* instance = nullptr;
 bool bFirst = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    return;
+  //  return;
    if(instance != nullptr)
    {
       
@@ -320,7 +320,7 @@ void VD_Client::Update(float dt)
 void VD_Client::Render()
 {
     unsigned int modelLoc, viewLoc, projLoc , objectColorLoc,lightPosLoc , lightColorLoc;
-    glm::vec4 lightColor = glm::vec4(1.0f, 0, 0, 1.0f);
+    glm::vec4 lightColor = glm::vec4(1.0f, 1, 1, 1.0f);
     glm::vec4 objectColor = glm::vec4(1.0f,0,0,1.0f);
 
     glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -341,7 +341,7 @@ void VD_Client::Render()
     glm::mat4 modelLightPos = glm::mat4(1.0f);
     modelLightPos = glm::translate(modelLightPos, lightPosition);
     modelLightPos = glm::scale(modelLightPos, glm::vec3(0.1f));
-
+    
     //Get Uniform
     modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "model");
     viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderForLight").GetID(), "view");
@@ -364,7 +364,8 @@ void VD_Client::Render()
    // glBindVertexArray(cubeRenderer.VAO);//---REusing //TODO: We used same set of calls to create this cube
     glBindVertexArray(cubeWithNormalRenderer.VAO);
     model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+   // model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+  //  model = glm::rotate(model, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
      modelLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "model");
    viewLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "view");
@@ -373,10 +374,13 @@ void VD_Client::Render()
     objectColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "objectColor");
     lightColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "lightColor");
     lightPosLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "lightPos");
+    unsigned int camLoc  = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(),"viewPos");
+
     //TODO: ALWays object color is 3
     glUniform3f(objectColorLoc, objectColor.x, objectColor.y, objectColor.z);
     glUniform3f(lightColorLoc, lightColor.x, lightColor.y, lightColor.z);
     glUniform3f(lightPosLoc, lightPosition.x, lightPosition.y, lightPosition.z);
+    glUniform3f(camLoc, cam.vPosition.x, cam.vPosition.y, cam.vPosition.z);
    
     
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
