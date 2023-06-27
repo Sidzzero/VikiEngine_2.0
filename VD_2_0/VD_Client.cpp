@@ -453,10 +453,10 @@ void VD_Client::Render()
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-   // glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
 
     
-    
+    /*
     for (unsigned int i = 0; i < 5; i++)
     {
         glm::mat4 model = glm::mat4(1.0f);
@@ -467,6 +467,7 @@ void VD_Client::Render()
         glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
     
     }
+    */
     
    
 
