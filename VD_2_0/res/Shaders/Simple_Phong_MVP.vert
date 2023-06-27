@@ -13,9 +13,13 @@ out vec3 FragPos;
 
 void main()
 {
-    FragPos = vec3(model * vec4(aPos , 1.0) );
-    Normal = aNormal;
- //  Normal = mat3(transpose(inverse(model))) * aNormal;
-    TexCoord = aTexCoord;
-   gl_Position = projection * view * model * vec4(FragPos, 1.0);
+  gl_Position = projection * view * model * vec4(aPos, 1.0);  // Calculate the final position of the vertex
+
+    FragPos = vec3(model * vec4(aPos, 1.0));  // Transform vertex position to world coordinates
+
+    // Uncomment the line below if scaling is involved in the model transformation
+     Normal = mat3(transpose(inverse(model))) * aNormal;
+
+    //Normal = aNormal;       // Pass vertex normal to fragment shader
+    TexCoord = aTexCoord;   // Pass texture coordinate to fragment shader
 }

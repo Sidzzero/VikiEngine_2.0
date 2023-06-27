@@ -226,17 +226,21 @@ void static CreateBufferWithPositionUVNormalOnly(Mesh& mesh, Buffer& buffer)
 	// 2. copy our vertices array in a buffer for OpenGL to use
 	// 3. then set our vertex attributes pointers
 	// Looks like it takes row by row so mention row size 5*float and starting point in them
+	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	//UV
+	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
 		(void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(2);
 	//noraml
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
 		(void*)(sizeof(float) * 5));
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+
+	
+
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
