@@ -49,7 +49,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
        instance->yLast = ypos;
        cam->pitch += ( Ypos *cam->mouseSentivity);
        cam->yaw += (Xpos * cam->mouseSentivity);
-       std::cout<< cam->yaw <<std::endl;
+      // std::cout<< cam->yaw <<std::endl;
        if (cam->pitch <-89.0f)
        {
            cam->pitch = -89.0f;
@@ -347,7 +347,7 @@ void VD_Client::Init(GLFWwindow* a_window)
      ResourceManager::LoadShader("ShaderForLight", ".//res//Shaders//Simple_Color_MVP.vert", ".//res//Shaders//Simple_Color_MVP.frag");
 
      //Object Phong Lighting object
-     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_Phong_MVP.vert", ".//res//Shaders//Simple_Phong_MVP.frag");
+     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_Phong_MVP.vert", ".//res//Shaders//Simple_Phong_Color_Struct_MVP.frag");
 
      glfwSetCursorPosCallback(a_window, mouse_callback);
 }
@@ -452,6 +452,14 @@ void VD_Client::Render()
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glm::vec3 ambient = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 specular = glm::vec3(1.0f, 0.5f, 0.31f);
+    float shininess = 32.0f;
+    ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambient);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuse);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", specular);
+    ResourceManager::GetShader("ShaderMVP").SetFloat("material.shininess", shininess);
 
     glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
 

@@ -67,3 +67,23 @@ void Shader::Use()
 {
      return ID;
 }
+
+ void Shader::SetVec3(const char* name, glm::vec3& value)
+ {
+     auto tempLoc = glGetUniformLocation(GetID(), name);
+     if (tempLoc == -1)
+     {
+       //  std::cout << "Inoccrect Unifrom Value" << std::endl;
+     }
+     glUniform3f(tempLoc, value.x, value.y, value.z);
+ }
+
+ void Shader::SetFloat(const char* name, float value)
+ {
+     auto tempLoc = glGetUniformLocation(GetID(), name);
+     if (tempLoc == -1)
+     {
+     //    std::cout << "Inoccrect Unifrom Value" << std::endl;
+     }
+     glUniform1f(tempLoc, value);
+ }
