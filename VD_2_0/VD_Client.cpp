@@ -438,28 +438,34 @@ void VD_Client::Render()
     projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "projection");
     //Lighting the Object
     objectColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "objectColor");
-    lightColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "lightColor");
-    lightPosLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "lightPos");
     unsigned int camLoc  = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(),"viewPos");
 
     //TODO: ALWays object color is 3
     glUniform3f(objectColorLoc, objectColor.x, objectColor.y, objectColor.z);
-    glUniform3f(lightColorLoc, lightColor.x, lightColor.y, lightColor.z);
-    glUniform3f(lightPosLoc, lightPosition.x, lightPosition.y, lightPosition.z);
     glUniform3f(camLoc, cam.vPosition.x, cam.vPosition.y, cam.vPosition.z);
    
     
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    glm::vec3 ambient = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 specular = glm::vec3(1.0f, 0.5f, 0.31f);
-    float shininess = 32.0f;
-    ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambient);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuse);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", specular);
-    ResourceManager::GetShader("ShaderMVP").SetFloat("material.shininess", shininess);
+    glm::vec3 ambientForObject = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 diffuseForObject = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 specularForObject = glm::vec3(1.0f, 0.5f, 0.31f);
+    float shininessForObject = 32.0f;
+
+    glm::vec3 ambientForLight = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 diffuseForLight = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 specularForLight = glm::vec3(1.0f, 0.5f, 0.31f);
+
+    ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambientForObject);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuseForObject);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("material.specular", specularForObject);
+    ResourceManager::GetShader("ShaderMVP").SetFloat("material.shininess", shininessForObject);
+
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.position", lightPosition);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.ambient", ambientForObject);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.diffuse", diffuseForObject);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.specular", specularForObject);
 
     glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
 
