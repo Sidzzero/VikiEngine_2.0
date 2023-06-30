@@ -3,12 +3,16 @@
 
 #include <iostream>
 #include <memory>
-using namespace std;
-#include "include/glad/glad.h"
-#include "include/GLFW/glfw3.h"
-
-
+//IMGUI
 #include "VD_Client.h"
+
+
+using namespace std;
+//#include "include/glad/glad.h"
+//#include "include/GLFW/glfw3.h"
+
+
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -59,6 +63,15 @@ int main()
 	float lastFrame = 0.0f; // Time of last frame
 	// render loop
 	// -----------
+
+	
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window,true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -66,9 +79,12 @@ int main()
 		lastFrame = currentFrame;
 		// input
 		// -----
-		processInput(window);
+		if (!io.WantCaptureMouse)
+		{
+	     	client->Input(deltaTime);
+     		processInput(window);
+		}
 
-		client->Input(deltaTime);
 		client->Update(deltaTime);
 	
 
@@ -76,15 +92,27 @@ int main()
 		// ------
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		 ImGui_ImplOpenGL3_NewFrame();
+		 ImGui_ImplGlfw_NewFrame();
+		 ImGui::NewFrame();
 
 		client->Render();
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
+		ImGui::Begin("VD Engine ToolBox");
+		ImGui::Text("This works perfectly ! ");
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	
 	}
-
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------
 	glfwTerminate();

@@ -1,8 +1,8 @@
 #ifndef  VD_CLIENT_H
 #define VD_CLIENT_H
 
-#include "Client.h"
 #include "common.h"
+#include "Client.h"
 #include "ResourceManager.h"
 #include <iostream>
 #include "Camera.h"

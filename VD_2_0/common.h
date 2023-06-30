@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "Core.h"
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/matrix_transform.hpp>
 #include <glm/glm/gtc/type_ptr.hpp>
@@ -41,9 +42,6 @@ typedef struct Mesh
 	Transformation transform;
 };
 
-
-#include "include/glad/glad.h"
-#include "include/GLFW/glfw3.h"
 
 typedef struct Buffer
 {

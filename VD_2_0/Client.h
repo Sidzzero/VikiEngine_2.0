@@ -1,7 +1,7 @@
 #ifndef  CLIENT_H
 #define CLIENT_H
-#include "include/glad/glad.h"
-#include "include/GLFW/glfw3.h"
+
+#include "Core.h"
 class Client
 {
 public:
