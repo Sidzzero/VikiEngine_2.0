@@ -3,16 +3,9 @@
 
 #include <iostream>
 #include <memory>
-//IMGUI
 #include "VD_Client.h"
 
-
 using namespace std;
-//#include "include/glad/glad.h"
-//#include "include/GLFW/glfw3.h"
-
-
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -20,8 +13,6 @@ void processInput(GLFWwindow* window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-
 
 int main()
 {
