@@ -335,7 +335,8 @@ void VD_Client::Init(GLFWwindow* a_window)
 
 
     // ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
-     ResourceManager::LoadTexture(".//res//container2.png", true, "TestTexture");
+    ResourceManager::LoadTexture(".//res//Textures//container2.png", true, "TestTexture");
+    ResourceManager::LoadTexture(".//res//Textures//container2_specular.png", true, "TestTexture_Specular");
    
      ResourceManager::LoadShader("ShaderWithTexture",".//res//Shaders//Simple.vert",".//res//Shaders//Simple.frag");
 
@@ -460,13 +461,17 @@ void VD_Client::Render()
 
    // ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambientForObject);
   //  ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuseForObject);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("material.specular", specularForObject);
+  //  ResourceManager::GetShader("ShaderMVP").SetVec3("material.specular", specularForObject);
     ResourceManager::GetShader("ShaderMVP").SetFloat("material.shininess", shininessForObject);
 
-    ResourceManager::GetShader("ShaderMVP").SetInt("material.specular", 0);
+  
     glActiveTexture(GL_TEXTURE0);
     ResourceManager::GetTexture("TestTexture").Bind();
+    glActiveTexture(GL_TEXTURE1);
+    ResourceManager::GetTexture("TestTexture_Specular").Bind();
     glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
+
+
 
     ResourceManager::GetShader("ShaderMVP").SetVec3("light.position", lightPosition);
     ResourceManager::GetShader("ShaderMVP").SetVec3("light.ambient", ambientForLight);
