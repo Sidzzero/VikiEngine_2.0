@@ -335,7 +335,7 @@ void VD_Client::Init(GLFWwindow* a_window)
 
 
     // ResourceManager::LoadShaderWithHardCoded(C_SimpleShader, vertexShaderSource, fragmentShaderSource);
-     ResourceManager::LoadTexture(".//res//Test.jpg", false, "TestTexture");
+     ResourceManager::LoadTexture(".//res//container2.png", true, "TestTexture");
    
      ResourceManager::LoadShader("ShaderWithTexture",".//res//Shaders//Simple.vert",".//res//Shaders//Simple.frag");
 
@@ -347,7 +347,7 @@ void VD_Client::Init(GLFWwindow* a_window)
      ResourceManager::LoadShader("ShaderForLight", ".//res//Shaders//Simple_Color_MVP.vert", ".//res//Shaders//Simple_Color_MVP.frag");
 
      //Object Phong Lighting object
-     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_Phong_MVP.vert", ".//res//Shaders//Simple_Phong_Color_Struct_MVP.frag");
+     ResourceManager::LoadShader("ShaderMVP", ".//res//Shaders//Simple_Phong_MVP.vert", ".//res//Shaders//Simple_Phong_Color_Text_Struct_MVP.frag");
 
      glfwSetCursorPosCallback(a_window, mouse_callback);
 }
@@ -395,8 +395,7 @@ void VD_Client::Render()
     //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), ((float)800 / (float)600), 0.1f, 100.0f);
 
-    glActiveTexture(GL_TEXTURE0);
-    ResourceManager::GetTexture("TestTexture").Bind();
+  
 
     //-----------Light Position---------------------
     glBindVertexArray(lightRenderer.VAO);
@@ -425,7 +424,9 @@ void VD_Client::Render()
 
 
     //-----------object 
+
     ResourceManager::GetShader("ShaderMVP").Use();
+  
    // glBindVertexArray(cubeRenderer.VAO);//---REusing //TODO: We used same set of calls to create this cube
     //glBindVertexArray(cubeVAO);
    glBindVertexArray(cubeWithNormalRenderer.VAO);//TODO add this later
@@ -450,38 +451,46 @@ void VD_Client::Render()
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     glm::vec3 ambientForObject = glm::vec3(1.0f, 0.5f, 0.31f);
     glm::vec3 diffuseForObject = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 specularForObject = glm::vec3(1.0f, 0.5f, 0.31f);
-    float shininessForObject = 32.0f;
+    glm::vec3 specularForObject = glm::vec3(0.5f, 0.5f, 0.5f);
+    float shininessForObject = 64.0f;
 
-    glm::vec3 ambientForLight = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 diffuseForLight = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 specularForLight = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 ambientForLight = glm::vec3(0.2f, 0.2f, 0.2f);
+    glm::vec3 diffuseForLight = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::vec3 specularForLight = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambientForObject);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuseForObject);
+   // ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambientForObject);
+  //  ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuseForObject);
     ResourceManager::GetShader("ShaderMVP").SetVec3("material.specular", specularForObject);
     ResourceManager::GetShader("ShaderMVP").SetFloat("material.shininess", shininessForObject);
 
-    ResourceManager::GetShader("ShaderMVP").SetVec3("light.position", lightPosition);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("light.ambient", ambientForObject);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("light.diffuse", diffuseForObject);
-    ResourceManager::GetShader("ShaderMVP").SetVec3("light.specular", specularForObject);
-
+    ResourceManager::GetShader("ShaderMVP").SetInt("material.specular", 0);
+    glActiveTexture(GL_TEXTURE0);
+    ResourceManager::GetTexture("TestTexture").Bind();
     glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
 
-    
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.position", lightPosition);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.ambient", ambientForLight);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.diffuse", diffuseForLight);
+    ResourceManager::GetShader("ShaderMVP").SetVec3("light.specular", specularForLight);
+
+
     /*
+    glm::vec3 startPos = glm::vec3(1.0f,0,0);
+    glm::mat4 tempMat = glm::mat4(1.0f);
     for (unsigned int i = 0; i < 5; i++)
     {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.5f, 0.0f));
+        model = glm::translate(tempMat, startPos);
+        
+       // float angle = 20.0f * i;
+       // model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.5f, 0.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
+        startPos.x += 2;
     
     }
     */
+    
     
    
 
