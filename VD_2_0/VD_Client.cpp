@@ -32,6 +32,10 @@ static VD_Client* instance = nullptr;
 bool bFirst = false;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    if (ImGui::GetIO().WantCaptureMouse)
+    {
+        return;
+    }
   //  return;
    if(instance != nullptr)
    {
@@ -355,29 +359,37 @@ void VD_Client::Init(GLFWwindow* a_window)
 
 void VD_Client::Input(float dt)
 {
+    if (ImGui::GetIO().WantCaptureMouse)
+    {
+        return;
+    }
 }
 
 void VD_Client::Update(float dt)
 {
+    if (!ImGui::GetIO().WantCaptureMouse)
+    {
+        if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS)
+        {
+            cam.vPosition += cam.vFront * cam.KeyboardSentivity * dt;
+        }
+        else  if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        {
+            cam.vPosition -= cam.vFront * cam.KeyboardSentivity * dt;
+        }
+        if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            //TODO :Check why so
+          //cam.vPosition += cam.vRight * cam.KeyboardSentivity * dt;
+            cam.vPosition += glm::normalize(glm::cross(cam.vFront, cam.vUp)) * cam.KeyboardSentivity * dt;
+        }
+        else if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            cam.vPosition -= glm::normalize(glm::cross(cam.vFront, cam.vUp)) * cam.KeyboardSentivity * dt;
+        }
+        return;
+    }
    
-    if (glfwGetKey(m_window,GLFW_KEY_UP)== GLFW_PRESS)
-    {
-        cam.vPosition += cam.vFront * cam.KeyboardSentivity*dt;
-    }
-    else  if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    {
-        cam.vPosition -= cam.vFront * cam.KeyboardSentivity * dt;
-    }
-      if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    {
-          //TODO :Check why so
-        //cam.vPosition += cam.vRight * cam.KeyboardSentivity * dt;
-        cam.vPosition+=glm::normalize(glm::cross(cam.vFront,cam.vUp))*cam.KeyboardSentivity * dt;
-    }
-    else if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    {
-          cam.vPosition -= glm::normalize(glm::cross(cam.vFront, cam.vUp)) * cam.KeyboardSentivity * dt;
-    }
 
 
 }
@@ -396,12 +408,24 @@ void VD_Client::Render()
     //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), ((float)800 / (float)600), 0.1f, 100.0f);
 
-  
+    glm::vec3 ambientForObject = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 diffuseForObject = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 specularForObject = glm::vec3(0.5f, 0.5f, 0.5f);
+    float shininessForObject = 64.0f;
 
+    glm::vec3 ambientForLight = glm::vec3(0.2f, 0.2f, 0.2f);
+    glm::vec3 diffuseForLight = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::vec3 specularForLight = glm::vec3(1.0f, 1.0f, 1.0f);
+    unsigned int camLoc = 0;
+    lightPosition = glm::vec3(0, 0, 1.0f);
+    ImGui::Begin("VD Engine ToolBox");
+    ImGui::Text("This works perfectly ! ");
+    ImGui::InputFloat("Specular Shiness", &shininessForObject);
+    ImGui::End();
     //-----------Light Position---------------------
     glBindVertexArray(lightRenderer.VAO);
   
-    lightPosition = glm::vec3(0,0, 1.0f);
+  
     ResourceManager::GetShader("ShaderForLight").Use();
     glm::mat4 modelLightPos = glm::mat4(1.0f);
     modelLightPos = glm::translate(modelLightPos, lightPosition);
@@ -417,7 +441,7 @@ void VD_Client::Render()
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelLightPos));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform4f(baseColorLoc,1,1,1, lightColor.w);
+    glUniform4f(baseColorLoc, lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
   
     glDrawArrays(GL_TRIANGLES, 0, LightCube.vertices.size());
@@ -440,7 +464,7 @@ void VD_Client::Render()
     projLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "projection");
     //Lighting the Object
     objectColorLoc = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(), "objectColor");
-    unsigned int camLoc  = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(),"viewPos");
+     camLoc  = glGetUniformLocation(ResourceManager::GetShader("ShaderMVP").GetID(),"viewPos");
 
     //TODO: ALWays object color is 3
     glUniform3f(objectColorLoc, objectColor.x, objectColor.y, objectColor.z);
@@ -450,14 +474,10 @@ void VD_Client::Render()
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    glm::vec3 ambientForObject = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 diffuseForObject = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 specularForObject = glm::vec3(0.5f, 0.5f, 0.5f);
-    float shininessForObject = 64.0f;
+  
 
-    glm::vec3 ambientForLight = glm::vec3(0.2f, 0.2f, 0.2f);
-    glm::vec3 diffuseForLight = glm::vec3(0.5f, 0.5f, 0.5f);
-    glm::vec3 specularForLight = glm::vec3(1.0f, 1.0f, 1.0f);
+    //Try to reroute all the changeable values here
+ 
 
    // ResourceManager::GetShader("ShaderMVP").SetVec3("material.ambient", ambientForObject);
   //  ResourceManager::GetShader("ShaderMVP").SetVec3("material.diffuse", diffuseForObject);
@@ -469,8 +489,8 @@ void VD_Client::Render()
     ResourceManager::GetTexture("TestTexture").Bind();
     glActiveTexture(GL_TEXTURE1);
     ResourceManager::GetTexture("TestTexture_Specular").Bind();
-    glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
 
+  
 
 
     ResourceManager::GetShader("ShaderMVP").SetVec3("light.position", lightPosition);
@@ -478,7 +498,10 @@ void VD_Client::Render()
     ResourceManager::GetShader("ShaderMVP").SetVec3("light.diffuse", diffuseForLight);
     ResourceManager::GetShader("ShaderMVP").SetVec3("light.specular", specularForLight);
 
+  
 
+
+    glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
     /*
     glm::vec3 startPos = glm::vec3(1.0f,0,0);
     glm::mat4 tempMat = glm::mat4(1.0f);
@@ -497,7 +520,7 @@ void VD_Client::Render()
     */
     
     
-   
+  
 
    
 }

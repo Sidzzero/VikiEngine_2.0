@@ -90,9 +90,9 @@ int main()
 		client->Render();
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
-		ImGui::Begin("VD Engine ToolBox");
-		ImGui::Text("This works perfectly ! ");
-		ImGui::End();
+	//	ImGui::Begin("VD Engine ToolBox");
+	//	ImGui::Text("This works perfectly ! ");
+	//	ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
