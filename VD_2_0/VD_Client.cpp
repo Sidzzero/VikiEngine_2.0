@@ -502,7 +502,7 @@ void VD_Client::Render()
 
 
     glDrawArrays(GL_TRIANGLES, 0, CubeWithNormal.vertices.size());
-    /*
+    
     glm::vec3 startPos = glm::vec3(1.0f,0,0);
     glm::mat4 tempMat = glm::mat4(1.0f);
     for (unsigned int i = 0; i < 5; i++)
@@ -517,7 +517,7 @@ void VD_Client::Render()
         startPos.x += 2;
     
     }
-    */
+    
     
     
   
